@@ -28,6 +28,7 @@ class Game {
 
         this.isWebGL = (this.renderer.type === PIXI.RENDERER_TYPE.WEBGL); //TODO: pull request en las definiciones, esto está mal
         this.isWebAudio = (Device.hasWebAudio); //TODO: check -> && config.useWebAudio
+        this.stage.position.set(width/2, height/2);
     }
 
     private _animate() : void{
@@ -62,6 +63,14 @@ class Game {
     stop():Game{
         window.cancelAnimationFrame(this.raf);
         return this;
+    }
+
+    get width() : number {
+        return this.renderer.width;
+    }
+
+    get height() : number {
+        return this.renderer.height;
     }
 
 }
