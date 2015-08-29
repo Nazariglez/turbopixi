@@ -1,4 +1,4 @@
-///<reference path="./defs/pixi.d.ts" />
+///<reference path="./defs/pixi.js.d.ts" />
 if(typeof PIXI === "undefined"){
     throw new Error('Not found pixi.js...');
 }

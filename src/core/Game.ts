@@ -1,4 +1,4 @@
-///<reference path="../defs/pixi.d.ts" />
+///<reference path="../defs/pixi.js.d.ts" />
 ///<reference path="../defs/core.d.ts" />
 import Device = require('./Device');
 var last:number = 0;

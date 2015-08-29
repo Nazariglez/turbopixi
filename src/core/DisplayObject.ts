@@ -1,4 +1,4 @@
-///<reference path="../defs/pixi.d.ts" />
+///<reference path="../defs/pixi.js.d.ts" />
 
 export = function inject(){
     PIXI.DisplayObject.prototype.speed = 0;

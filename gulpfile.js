@@ -68,3 +68,8 @@ gulp.task('compile', function() {
 gulp.task('watch', function(){
     return watch();
 });
+
+gulp.task('getDefs', function(){
+    return gulp.src('../pixi-typescript/pixi.js.d.ts')
+        .pipe(gulp.dest('./src/defs/'));
+});
