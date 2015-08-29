@@ -213,6 +213,8 @@ declare module PIXI {
 
     export class Container extends DisplayObject {
 
+        static _killedObjects : Container[];
+
         protected _renderWebGL(renderer: WebGLRenderer): void;
         protected _renderCanvas(renderer: CanvasRenderer): void;
 
@@ -237,6 +239,8 @@ declare module PIXI {
 
         update(deltaTime: number): DisplayObject;
         addTo(parent: Container): DisplayObject;
+        kill(): DisplayObject;
+        remove(): DisplayObject;
 
         renderWebGL(renderer: WebGLRenderer): void;
         renderCanvas(renderer: CanvasRenderer): void;

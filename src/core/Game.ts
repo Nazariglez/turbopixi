@@ -52,6 +52,13 @@ class Game {
             this.stage.children[i].update(this.delta);
         }
 
+        //clean killed objects
+        var len:number = PIXI.Container._killedObjects.length;
+        if(len){
+            for(var i:number = 0; i < len; i++) PIXI.Container._killedObjects[i].remove();
+            PIXI.Container._killedObjects.length = 0;
+        }
+
         return this;
     }
 
