@@ -131,6 +131,13 @@ declare module PIXI {
 
         updateTransform(): void;
 
+        update(deltaTime:number): DisplayObject;
+
+        speed: number;
+        direction: number;
+        velocity: Point;
+        rotationSpeed: number;
+
         position: Point;
         scale: Point;
         pivot: Point;
@@ -227,6 +234,9 @@ declare module PIXI {
         removeChildren(beginIndex?: number, endIndex?: number): DisplayObject[];
         destroy(destroyChildren?: boolean): void;
         generateTexture(renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer, resolution?: number, scaleMode?: number): Texture;
+
+        update(deltaTime: number): DisplayObject;
+        addTo(parent: Container): DisplayObject;
 
         renderWebGL(renderer: WebGLRenderer): void;
         renderCanvas(renderer: CanvasRenderer): void;
@@ -1171,7 +1181,7 @@ declare module PIXI {
             protected _durations: number[];
             protected _currentTime: number;
 
-            protected update(deltaTime: number): void;
+            update(deltaTime: number): MovieClip;
 
             constructor(textures: Texture[]);
 
