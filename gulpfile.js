@@ -1,75 +1,63 @@
 var gulp = require('gulp');
-
-var source = require('vinyl-source-stream');
-var browserify = require('browserify');
-var tsify = require('tsify');
-var watchify = require('watchify');
-var buffer = require('vinyl-buffer');
+var typescript = require('gulp-typescript');
+var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var merge = require('merge2');
+var sourcemaps = require('gulp-sourcemaps');
+var stripComments = require('gulp-strip-comments');
+var header = require('gulp-header');
+var wrap = require('gulp-wrap-js');
+var fs = require('fs');
 
-var config = {
-    debug: true,
-    publicPath: __dirname + '/bin',
-    app: {
-        path: __dirname + '/src',
-        main: 'index.ts',
-        result: 'turbopixi'
-    }
-};
+var pkg = require('./package.json');
+var banner = ['/**',
+    ' * TurboPixi',
+    ' * @version v<%= pkg.version %>',
+    ' * @license <%= pkg.license %>',
+    ' * @author <%= pkg.author %>',
+    ' */',
+    ''].join('\n');
 
-function getBundler(args){
-    args = args || {};
-    args.debug = config.debug;
-    args.fullPaths = false;
-    args.basedir = config.app.path;
+var txtWrapper = fs.readFileSync('./file-wrapper.txt', 'utf8');
 
-    return browserify(args)
-        .add(config.app.path + '/' + config.app.main)
-        .plugin(tsify, { target: 'ES5' });
-}
+gulp.task('compile', function(){
+    var tsResult = gulp.src('./src/**/*.ts')
+        .pipe(sourcemaps.init())
+        .pipe(typescript({
+            noImplicitAny: true,
+            sortOutput: true,
+            module: "commonjs",
+            target: "ES5",
+            declarationFiles: true
+        }));
 
-function createBundler(bundler){
-    bundler = bundler || getBundler();
-    return bundler.bundle()
+    return merge([
+        tsResult.js.pipe(concat('turbopixi.js'))
+            .pipe(wrap(txtWrapper))
+            .pipe(header(banner, {pkg:pkg}))
+            .pipe(sourcemaps.write())
+            .pipe(gulp.dest('./bin/'))
+            .pipe(rename('turbopixi.min.js'))
+            .pipe(uglify())
+            .pipe(header(banner, {pkg:pkg}))
+            .pipe(gulp.dest('./bin/')),
 
-        .on('error', function(err){
-            console.error('Error: ' + err.message);
-        })
-
-        .pipe(source(config.app.result + '.js'))
-        .pipe(gulp.dest(config.publicPath))
-        .pipe(buffer())
-        .pipe(uglify())
-        .pipe(rename(config.app.result + '.min.js'))
-        .pipe(gulp.dest(config.publicPath));
-}
-
-function watch(){
-    var bundler = watchify(getBundler(watchify.args));
-
-    bundler.on('update', function(){
-        console.log('Compiling...');
-        var bundle = createBundler(bundler);
-    });
-
-    bundler.on('time', function(time){
-        console.log('Compiled in ' + (time/1000) + ' seconds.');
-    });
-
-    return createBundler(bundler);
-}
-
-gulp.task('compile', function() {
-    var bundler = getBundler();
-    return createBundler(bundler);
+        tsResult.dts.pipe(concat('turbopixi.d.ts'))
+            .pipe(stripComments())
+            .pipe(gulp.dest('./bin'))
+        ]);
 });
 
 gulp.task('watch', function(){
-    return watch();
+    gulp.watch('./src/**/*.ts', ['compile']);
 });
 
-gulp.task('getDefs', function(){
+gulp.task('watch-defs', function(){
+    gulp.watch('../pixi-typescript/pixi.js.d.ts', ['get-defs']);
+});
+
+gulp.task('get-defs', function(){
     return gulp.src('../pixi-typescript/pixi.js.d.ts')
-        .pipe(gulp.dest('./src/defs/'));
+        .pipe(gulp.dest('./defs/'));
 });

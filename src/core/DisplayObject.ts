@@ -1,12 +1,12 @@
-///<reference path="../defs/pixi.js.d.ts" />
+///<reference path="../../defs/pixi.js.d.ts" />
 
-export = function inject(){
-    PIXI.DisplayObject.prototype.speed = 0;
-    PIXI.DisplayObject.prototype.velocity = new PIXI.Point();
-    PIXI.DisplayObject.prototype.direction = 0;
-    PIXI.DisplayObject.prototype.rotationSpeed = 0;
+module PIXI {
+    DisplayObject.prototype.speed = 0;
+    DisplayObject.prototype.velocity = new Point();
+    DisplayObject.prototype.direction = 0;
+    DisplayObject.prototype.rotationSpeed = 0;
 
-    PIXI.DisplayObject.prototype.update = function(deltaTime:number){
+    DisplayObject.prototype.update = function(deltaTime:number){
         return this;
     };
 }

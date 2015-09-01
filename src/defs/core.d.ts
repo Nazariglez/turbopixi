@@ -1,3 +1,0 @@
-interface GameConfig {
-    useWebAudio?:boolean;
-}

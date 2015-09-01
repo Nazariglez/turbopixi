@@ -1,0 +1,3 @@
+(function(PIXI){
+    %= body %
+})( (typeof PIXI === "object") ? PIXI : null );

@@ -10,11 +10,7 @@ declare class PIXI {
     static RAD_TO_DEG: number;
     static DEG_TO_RAD: number;
     static TARGET_FPMS: number;
-    static RENDERER_TYPE: {
-        UNKNOWN: number;
-        WEBGL: number;
-        CANVAS: number;
-    };
+
     static BLEND_MODES: {
         NORMAL: number;
         ADD: number;
@@ -76,6 +72,12 @@ declare class PIXI {
 }
 
 declare module PIXI {
+
+    export var RENDERER_TYPE: {
+        UNKNOWN: number;
+        WEBGL: number;
+        CANVAS: number;
+    };
 
     export function autoDetectRenderer(width: number, height: number, options?: PIXI.RendererOptions, noWebGL?: boolean): PIXI.WebGLRenderer | PIXI.CanvasRenderer;
     export var loader: PIXI.loaders.Loader;
