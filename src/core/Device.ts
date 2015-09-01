@@ -1,5 +1,10 @@
+//Many checks are based on https://github.com/arasatasaygin/is.js/blob/master/is.js
+
+///<reference path="../../defs/pixi.js.d.ts" />
 module PIXI {
-    //Many checks are based on https://github.com/arasatasaygin/is.js/blob/master/is.js
+    var navigator:Navigator = window.navigator;
+    var document:Document = window.document;
+
     var userAgent:string = 'navigator' in window && 'userAgent' in navigator && navigator.userAgent.toLowerCase() || '',
         vendor:string = 'navigator' in window && 'vendor' in navigator && navigator.vendor.toLowerCase() || '',
         appVersion:string = 'navigator' in window && 'appVersion' in navigator && navigator.appVersion.toLowerCase() || '';
@@ -127,9 +132,9 @@ module PIXI {
             return evt;
         },
 
-        vibrate : function(value:number){
+        vibrate : function(pattern: number | number[]){
             if(hasVibrate){
-                navigator.vibrate(value);
+                navigator.vibrate(pattern);
             }
         },
 
@@ -137,7 +142,6 @@ module PIXI {
             return window.navigator.onLine;
         }
     };
-
 }
 
 declare var process:any,
@@ -146,7 +150,7 @@ declare var process:any,
 
 interface Navigator {
     isCocoonJS:any;
-    vibrate(value:Number):boolean;
+    vibrate(pattern: number | number[]):boolean;
     getGamepads():any;
     webkitGetGamepads():any;
 }
