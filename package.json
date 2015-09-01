@@ -18,7 +18,9 @@
     "gulp-strip-comments": "^1.0.1",
     "gulp-typescript": "^2.8.1",
     "gulp-uglify": "^1.2.0",
+    "gulp-watch": "^4.3.5",
     "gulp-wrap-js": "^0.4.1",
-    "merge2": "^0.3.6"
+    "merge2": "^0.3.6",
+    "run-sequence": "^1.1.2"
   }
 }

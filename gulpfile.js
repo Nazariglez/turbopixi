@@ -9,6 +9,8 @@ var stripComments = require('gulp-strip-comments');
 var header = require('gulp-header');
 var wrap = require('gulp-wrap-js');
 var fs = require('fs');
+var watch = require('gulp-watch');
+var runSequence = require('run-sequence');
 
 var pkg = require('./package.json');
 var banner = ['/**',
@@ -50,7 +52,11 @@ gulp.task('compile', function(){
 });
 
 gulp.task('watch', function(){
-    gulp.watch('./src/**/*.ts', ['compile']);
+    //gulp.watch('./src/**/*.ts', ['compile']);
+    return gulp.src('./src/**/*.ts')
+        .pipe(watch('./src/**/*.ts', function(){
+            runSequence('compile');
+        }));
 });
 
 gulp.task('watch-defs', function(){
