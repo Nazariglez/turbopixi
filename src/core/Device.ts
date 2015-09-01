@@ -142,6 +142,61 @@ module PIXI {
             return window.navigator.onLine;
         }
     };
+
+    export interface DeviceData {
+        isChrome : boolean;
+        isFirefox : boolean;
+        isIE : boolean;
+        isOpera : boolean;
+        isSafari : boolean;
+        isIphone : boolean;
+        isIpad : boolean;
+        isIpod : boolean;
+        isAndroid : boolean;
+        isAndroidPhone : boolean;
+        isAndroidTablet : boolean;
+        isLinux : boolean;
+        isMac : boolean;
+        isWindow : boolean;
+        isWindowPhone : boolean;
+        isWindowTablet : boolean;
+        isMobile : boolean;
+        isTablet : boolean;
+        isDesktop : boolean;
+        isTouchDevice : boolean;
+        isCocoon : boolean;
+        isNodeWebkit : boolean;
+        isEjecta : boolean;
+        isCordova : boolean;
+        isCrosswalk : boolean;
+        isElectron : boolean;
+        isAtomShell : boolean;
+
+        hasVibrate : boolean;
+        hasMouseWheel : boolean;
+        hasFullScreen : boolean;
+        hasAccelerometer : boolean;
+        hasGamepad : boolean;
+
+        fullScreenRequest:fullScreenData;
+        fullScreenCancel:fullScreenData;
+
+        hasAudio : boolean;
+        hasHTMLAudio : boolean;
+        hasWebAudio : boolean;
+        webAudioContext:any;
+
+        hasMp3 : boolean;
+        hasM4a : boolean;
+        hasOgg : boolean;
+        hasWav : boolean;
+
+        isOnline:boolean;
+
+        getMouseWheelEvent():string;
+
+        vibrate(value:number):void;
+    }
 }
 
 declare var process:any,
@@ -180,59 +235,4 @@ interface HTMLDivElement {
     webkitRequestFullScreen():fullScreenData ;
     msRequestFullScreen():fullScreenData ;
     mozRequestFullScreen():fullScreenData ;
-}
-
-interface DeviceData {
-    isChrome : boolean;
-    isFirefox : boolean;
-    isIE : boolean;
-    isOpera : boolean;
-    isSafari : boolean;
-    isIphone : boolean;
-    isIpad : boolean;
-    isIpod : boolean;
-    isAndroid : boolean;
-    isAndroidPhone : boolean;
-    isAndroidTablet : boolean;
-    isLinux : boolean;
-    isMac : boolean;
-    isWindow : boolean;
-    isWindowPhone : boolean;
-    isWindowTablet : boolean;
-    isMobile : boolean;
-    isTablet : boolean;
-    isDesktop : boolean;
-    isTouchDevice : boolean;
-    isCocoon : boolean;
-    isNodeWebkit : boolean;
-    isEjecta : boolean;
-    isCordova : boolean;
-    isCrosswalk : boolean;
-    isElectron : boolean;
-    isAtomShell : boolean;
-
-    hasVibrate : boolean;
-    hasMouseWheel : boolean;
-    hasFullScreen : boolean;
-    hasAccelerometer : boolean;
-    hasGamepad : boolean;
-
-    fullScreenRequest:fullScreenData;
-    fullScreenCancel:fullScreenData;
-
-    hasAudio : boolean;
-    hasHTMLAudio : boolean;
-    hasWebAudio : boolean;
-    webAudioContext:any;
-
-    hasMp3 : boolean;
-    hasM4a : boolean;
-    hasOgg : boolean;
-    hasWav : boolean;
-
-    isOnline:boolean;
-
-    getMouseWheelEvent():string;
-
-    vibrate(value:number):void;
 }
