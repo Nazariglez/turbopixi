@@ -1,13 +1,22 @@
 ///<reference path="../../defs/pixi.js.d.ts" />
 ///<reference path="./Device.ts" />
+///<reference path="../display/Scene.ts" />
 module PIXI {
     var last:number = 0;
     var minFrameMS = 20;
 
-    export class Game {
-        id:string = "PixiGame";
+    var defaultGameConfig : GameConfig = {
+        id: "pixi.default.id",
+        useWebAudio: true,
+        width:800,
+        height:600
+    };
 
-        stage:Container = new Container();
+    export class Game {
+        id:string;
+
+        private _scenes:Scene[] = [];
+        scene:Scene;
         raf:any;
 
         renderer:WebGLRenderer | CanvasRenderer;
@@ -20,15 +29,19 @@ module PIXI {
         isWebGL:boolean;
         isWebAudio:boolean;
 
-        constructor(width:number = 800, height:number = 600, config?:GameConfig) {
-            this.renderer = autoDetectRenderer(width, height);
+        constructor(config?:GameConfig, rendererOptions?:RendererOptions) {
+            config = (<Object>Object).assign(defaultGameConfig, config);
+            this.id = config.id;
+            this.renderer = autoDetectRenderer(config.width, config.height, rendererOptions);
             this.canvas = this.renderer.view;
 
             document.body.appendChild(this.canvas);
 
-            this.isWebGL = (this.renderer.type === PIXI.RENDERER_TYPE.WEBGL);
-            this.isWebAudio = (Device.hasWebAudio); //TODO: check -> && config.useWebAudio
-            this.stage.position.set(width / 2, height / 2);
+            this.isWebGL = (this.renderer.type === RENDERER_TYPE.WEBGL);
+            this.isWebAudio = (Device.hasWebAudio&&config.useWebAudio);
+
+            var initialScene:Scene = new Scene('initial').addTo(this);
+            this.setScene(initialScene);
         }
 
         private _animate():void {
@@ -42,14 +55,14 @@ module PIXI {
 
             last = now;
 
-            this.renderer.render(this.stage);
+            this.renderer.render(this.scene);
 
             this.update(this.delta);
         }
 
         update(deltaTime:number):Game {
-            for (var i = 0; i < this.stage.children.length; i++) {
-                this.stage.children[i].update(this.delta);
+            for (var i = 0; i < this.scene.children.length; i++) {
+                this.scene.children[i].update(this.delta);
             }
 
             //clean killed objects
@@ -72,6 +85,32 @@ module PIXI {
             return this;
         }
 
+        setScene(scene:Scene | string):Game {
+            if(!(scene instanceof Scene)){
+                scene = this.getScene(<string>scene);
+            }
+
+            this.scene = <Scene>scene;
+            this.scene.position.set(this.width/2, this.height/2);
+            return this;
+        }
+
+        getScene(id:string):Scene{
+            var scene:Scene = null;
+            for(var i:number = 0; i < this._scenes.length; i++){
+                if(this._scenes[i].id === id){
+                    scene = this._scenes[i];
+                }
+            }
+
+            return scene;
+        }
+
+        addScene(scene:Scene):Game {
+            this._scenes.push(scene);
+            return this;
+        }
+
         get width():number {
             return this.renderer.width;
         }
@@ -81,8 +120,15 @@ module PIXI {
         }
 
     }
+
+    export interface GameConfig {
+        id?:string;
+        width?:number;
+        height?:number;
+        useWebAudio?:boolean;
+    }
 }
 
-interface GameConfig {
-    useWebAudio?:boolean;
+interface Object {
+    assign(target:Object, ...sources:Object[]):Object;
 }
