@@ -2,15 +2,12 @@
 
 
 declare module PIXI {
-}
-
-declare module PIXI {
     var Device: DeviceData;
 }
 declare var process: any, DocumentTouch: any, global: any;
 interface Navigator {
     isCocoonJS: any;
-    vibrate(value: Number): boolean;
+    vibrate(pattern: number | number[]): boolean;
     getGamepads(): any;
     webkitGetGamepads(): any;
 }
@@ -86,10 +83,6 @@ interface DeviceData {
 }
 
 
-declare module PIXI {
-}
-
-
 
 declare module PIXI {
     class Game {
@@ -114,4 +107,19 @@ declare module PIXI {
 }
 interface GameConfig {
     useWebAudio?: boolean;
+}
+
+
+declare module PIXI {
+}
+
+
+declare module PIXI {
+}
+
+
+declare module PIXI {
+    class Scene extends Container {
+        constructor();
+    }
 }
