@@ -4,11 +4,23 @@ if(!PIXI){
 }
 
 const PIXI_VERSION_REQUIRED = "3.0.7";
+const PIXI_VERSION = PIXI.VERSION.match(/\d.\d.\d/)[0];
 
-if(getVersion(PIXI.VERSION) < PIXI_VERSION_REQUIRED){
+if(PIXI_VERSION < PIXI_VERSION_REQUIRED){
     throw new Error("Pixi.js v" + PIXI.VERSION + " it's not supported, please use ^" + PIXI_VERSION_REQUIRED);
 }
 
-function getVersion(stringVersion:string):string {
-   return stringVersion.match(/\d.\d.\d/)[0];
+module PIXI {
+    export enum GAME_SCALE_TYPE {
+        NONE,
+        FILL,
+        ASPECT_FIT,
+        ASPECT_FILL
+    }
+
+    export enum AUDIO_TYPE {
+        UNKNOWN,
+        WEBAUDIO,
+        HTMLAUDIO
+    }
 }
