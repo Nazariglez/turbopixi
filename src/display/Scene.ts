@@ -4,7 +4,7 @@ module PIXI {
         id:string;
         static _idLen:number = 0;
 
-        constructor(id:string = ("default" + Scene._idLen++) ){
+        constructor(id:string = ("scene" + Scene._idLen++) ){
             super();
             this.id = id;
         }
