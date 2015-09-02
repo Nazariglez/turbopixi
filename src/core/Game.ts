@@ -187,8 +187,9 @@ module PIXI {
 
                 this.resize(width, height);
 
-                this.canvas.style['margin-top'] = topMargin + "px";
-                this.canvas.style['margin-left'] = leftMargin + "px";
+                var style:any = <any>this.canvas.style;
+                style['margin-top'] = topMargin + "px";
+                style['margin-left'] = leftMargin + "px";
             }
         }
 
