@@ -1,6 +1,8 @@
 ///<reference path="../../defs/pixi.js.d.ts" />
 ///<reference path="./Device.ts" />
 ///<reference path="../display/Scene.ts" />
+///<reference path="../audio/AudioManager.ts" />
+///<reference path="../input/InputManager.ts" />
 module PIXI {
     var last:number = 0;
     var minFrameMS = 20;
@@ -14,10 +16,13 @@ module PIXI {
 
     export class Game {
         id:string;
+        raf:any;
 
         private _scenes:Scene[] = [];
         scene:Scene;
-        raf:any;
+
+        audio:AudioManager;
+        input:InputManager;
 
         renderer:WebGLRenderer | CanvasRenderer;
         canvas:HTMLCanvasElement;
