@@ -3,15 +3,17 @@
 ///<reference path="../display/Scene.ts" />
 ///<reference path="../audio/AudioManager.ts" />
 ///<reference path="../input/InputManager.ts" />
+///<reference path="./DataManager.ts" />
 module PIXI {
     var last:number = 0;
     var minFrameMS = 20;
 
     var defaultGameConfig : GameConfig = {
         id: "pixi.default.id",
-        useWebAudio: true,
         width:800,
-        height:600
+        height:600,
+        useWebAudio: true,
+        usePersistantData: false
     };
 
     export class Game {
@@ -23,6 +25,7 @@ module PIXI {
 
         audio:AudioManager;
         input:InputManager;
+        data:DataManager;
 
         renderer:WebGLRenderer | CanvasRenderer;
         canvas:HTMLCanvasElement;
@@ -50,6 +53,7 @@ module PIXI {
 
             this.input = new InputManager(this);
             this.audio = new AudioManager(this);
+            this.data = new DataManager(this, config.usePersistantData);
         }
 
         private _animate():void {
@@ -134,6 +138,7 @@ module PIXI {
         width?:number;
         height?:number;
         useWebAudio?:boolean;
+        usePersistantData?:boolean;
     }
 }
 
