@@ -47,6 +47,9 @@ module PIXI {
 
             var initialScene:Scene = new Scene('initial').addTo(this);
             this.setScene(initialScene);
+
+            this.input = new InputManager(this);
+            this.audio = new AudioManager(this);
         }
 
         private _animate():void {

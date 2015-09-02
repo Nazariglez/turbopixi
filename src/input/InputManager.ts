@@ -1,7 +1,9 @@
 module PIXI {
     export class InputManager{
-        constructor(){
-
+        game:Game;
+        
+        constructor(game: Game){
+            this.game = game;
         }
     }
 }
