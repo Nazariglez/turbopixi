@@ -1,4 +1,59 @@
 
+declare const PIXI_VERSION_REQUIRED: string;
+declare const PIXI_VERSION: string;
+declare module PIXI {
+    enum GAME_SCALE_TYPE {
+        NONE = 0,
+        FILL = 1,
+        ASPECT_FIT = 2,
+        ASPECT_FILL = 3,
+    }
+    enum AUDIO_TYPE {
+        UNKNOWN = 0,
+        WEBAUDIO = 1,
+        HTMLAUDIO = 2,
+    }
+}
+
+declare module PIXI {
+    class AudioManager {
+        game: Game;
+        constructor(game: Game);
+    }
+}
+
+
+declare module PIXI {
+}
+
+
+declare module PIXI {
+}
+
+
+declare module PIXI {
+    class Scene extends Container {
+        id: string;
+        static _idLen: number;
+        constructor(id?: string);
+        addTo(game: Game | Container): Scene;
+    }
+}
+
+declare module PIXI {
+    class DataManager {
+        game: Game;
+        usePersistantData: boolean;
+        private _data;
+        constructor(game: Game, usePersitantData?: boolean);
+        load(): DataManager;
+        save(): DataManager;
+        reset(): DataManager;
+        set(key: string | Object, value?: any): DataManager;
+        get(key?: string): any;
+        del(key: string): DataManager;
+    }
+}
 
 
 declare module PIXI {
@@ -82,15 +137,15 @@ interface HTMLDivElement {
     mozRequestFullScreen(): fullScreenData;
 }
 
-
 declare module PIXI {
-    class Scene extends Container {
-        id: string;
-        static _idLen: number;
-        constructor(id?: string);
-        addTo(game: Game | Container): Scene;
+    class InputManager {
+        game: Game;
+        constructor(game: Game);
     }
 }
+
+
+
 
 
 
@@ -98,9 +153,12 @@ declare module PIXI {
 declare module PIXI {
     class Game {
         id: string;
+        raf: any;
         private _scenes;
         scene: Scene;
-        raf: any;
+        audio: AudioManager;
+        input: InputManager;
+        data: DataManager;
         renderer: WebGLRenderer | CanvasRenderer;
         canvas: HTMLCanvasElement;
         delta: number;
@@ -108,6 +166,7 @@ declare module PIXI {
         lastTime: number;
         isWebGL: boolean;
         isWebAudio: boolean;
+        private _resizeListener;
         constructor(config?: GameConfig, rendererOptions?: RendererOptions);
         private _animate();
         update(deltaTime: number): Game;
@@ -116,6 +175,11 @@ declare module PIXI {
         setScene(scene: Scene | string): Game;
         getScene(id: string): Scene;
         addScene(scene: Scene): Game;
+        resize(width: number, height: number, renderer?: boolean): Game;
+        autoResize(mode: number): Game;
+        private _resizeModeAspectFit();
+        private _resizeModeAspectFill();
+        private _resizeModeFill();
         width: number;
         height: number;
     }
@@ -124,16 +188,10 @@ declare module PIXI {
         width?: number;
         height?: number;
         useWebAudio?: boolean;
+        usePersistantData?: boolean;
+        gameScaleType?: number;
     }
 }
 interface Object {
     assign(target: Object, ...sources: Object[]): Object;
-}
-
-
-declare module PIXI {
-}
-
-
-declare module PIXI {
 }
