@@ -66,17 +66,19 @@ module PIXI {
         private _animate():void {
             this.raf = window.requestAnimationFrame(this._animate.bind(this));
 
-            var now:number = Date.now();
+            if(this.scene) {
+                var now:number = Date.now();
 
-            this.time += Math.min((now - last) / 1000, minFrameMS);
-            this.delta = this.time - this.lastTime;
-            this.lastTime = this.time;
+                this.time += Math.min((now - last) / 1000, minFrameMS);
+                this.delta = this.time - this.lastTime;
+                this.lastTime = this.time;
 
-            last = now;
+                last = now;
 
-            this.renderer.render(this.scene);
+                this.renderer.render(this.scene);
 
-            this.update(this.delta);
+                this.update(this.delta);
+            }
         }
 
         update(deltaTime:number):Game {
@@ -125,8 +127,31 @@ module PIXI {
             return scene;
         }
 
+        createScene(id?:string):Scene {
+            return (new Scene(id)).addTo(this);
+        }
+
+        removeScene(scene:string | Scene):Game{
+            if(typeof scene === "string"){
+                scene = this.getScene(<string>scene);
+            }
+
+            var index:number = this._scenes.indexOf(<Scene>scene);
+            if(index !== -1){
+                this._scenes.splice(index, 1);
+            }
+
+            return this;
+        }
+
         addScene(scene:Scene):Game {
             this._scenes.push(scene);
+            return this;
+        }
+
+        removeAllScenes():Game{
+            this._scenes.length = 0;
+            this.scene = null;
             return this;
         }
 
