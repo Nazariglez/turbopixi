@@ -1538,6 +1538,7 @@ declare module PIXI {
     }
     export class Loader extends EventEmitter {
       
+      static _pixiMiddleware:any[];
       constructor(baseUrl?: string, concurrency?: number);
       
       baseUrl: string;
@@ -1735,6 +1736,10 @@ declare module PIXI {
     WEBAUDIO = 1,
     HTMLAUDIO = 2,
   }
+  class AudioManager {
+    game: Game;
+    constructor(game: Game);
+  }
   class DataManager {
     game: Game;
     usePersistantData: boolean;
@@ -1794,16 +1799,13 @@ declare module PIXI {
     isOnline: boolean;
     getMouseWheelEvent(): string;
     vibrate(value: number): void;
+    getVisibilityChangeEvent(): string;
   }
   class Scene extends Container {
     id: string;
     static _idLen: number;
     constructor(id?: string);
     addTo(game: Game | Container): Scene;
-  }
-  class AudioManager {
-    game: Game;
-    constructor(game: Game);
   }
   class InputManager {
     game: Game;
@@ -1830,9 +1832,16 @@ declare module PIXI {
     update(deltaTime: number): Game;
     start(): Game;
     stop(): Game;
+    enableStopAtLostFocus(state?: boolean): Game;
+    disableStopAtLostFocus(): Game;
+    private _onVisibilityChange();
+    onLostFocus(isHide: boolean): Game;
     setScene(scene: Scene | string): Game;
     getScene(id: string): Scene;
+    createScene(id?: string): Scene;
+    removeScene(scene: string | Scene): Game;
     addScene(scene: Scene): Game;
+    removeAllScenes(): Game;
     resize(width: number, height: number, renderer?: boolean): Game;
     autoResize(mode: number): Game;
     private _resizeModeAspectFit();
@@ -1848,6 +1857,7 @@ declare module PIXI {
     useWebAudio?: boolean;
     usePersistantData?: boolean;
     gameScaleType?: number;
+    stopAtLostFocus?: boolean;
   }
 
 }

@@ -88,7 +88,7 @@ gulp.task('watch', function(){
 
 
 
-//private tasks to watch my custom changes in pixi definitions
+//private tasks to watch my custom changes at pixi definitions
 gulp.task('watch-defs', function(){
     gulp.watch('../pixi-typescript/pixi.js.d.ts', ['get-defs']);
 });
