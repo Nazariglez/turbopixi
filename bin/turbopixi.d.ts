@@ -1538,7 +1538,9 @@ declare module PIXI {
     }
     export class Loader extends EventEmitter {
       
-      static _pixiMiddleware:any[];
+      private static _pixiMiddleware:any[];
+      static addPixiMiddleware(fn:any):void;
+      
       constructor(baseUrl?: string, concurrency?: number);
       
       baseUrl: string;
@@ -1819,6 +1821,7 @@ declare module PIXI {
     audio: AudioManager;
     input: InputManager;
     data: DataManager;
+    loader: loaders.Loader;
     renderer: WebGLRenderer | CanvasRenderer;
     canvas: HTMLCanvasElement;
     delta: number;
@@ -1858,6 +1861,8 @@ declare module PIXI {
     usePersistantData?: boolean;
     gameScaleType?: number;
     stopAtLostFocus?: boolean;
+    assetsUrl?: string;
+    loaderConcurrency?: number;
   }
 
 }
