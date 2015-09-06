@@ -15,7 +15,9 @@ module PIXI {
         useWebAudio: true,
         usePersistantData: false,
         gameScaleType: GAME_SCALE_TYPE.NONE,
-        stopAtLostFocus: true
+        stopAtLostFocus: true,
+        assetsUrl: "",
+        loaderConcurrency: 10
     };
 
     export class Game {
@@ -28,6 +30,7 @@ module PIXI {
         audio:AudioManager;
         input:InputManager;
         data:DataManager;
+        loader:loaders.Loader;
 
         renderer:WebGLRenderer | CanvasRenderer;
         canvas:HTMLCanvasElement;
@@ -55,6 +58,7 @@ module PIXI {
             this.input = new InputManager(this);
             this.audio = new AudioManager(this);
             this.data = new DataManager(this, config.usePersistantData);
+            this.loader = new loaders.Loader(config.assetsUrl, config.loaderConcurrency);
 
             var initialScene:Scene = new Scene('initial').addTo(this);
             this.setScene(initialScene);
@@ -278,6 +282,8 @@ module PIXI {
         usePersistantData?:boolean;
         gameScaleType?:number;
         stopAtLostFocus?:boolean;
+        assetsUrl?:string;
+        loaderConcurrency?:number;
     }
 }
 
