@@ -6,7 +6,7 @@
 ///<reference path="./DataManager.ts" />
 module PIXI {
     var last:number = 0;
-    var minFrameMS = 20;
+    var maxFrameMS = 0.35;
 
     var defaultGameConfig : GameConfig = {
         id: "pixi.default.id",
@@ -74,7 +74,7 @@ module PIXI {
             if(this.scene) {
                 var now:number = Date.now();
 
-                this.time += Math.min((now - last) / 1000, minFrameMS);
+                this.time += Math.min((now - last) / 1000, maxFrameMS);
                 this.delta = this.time - this.lastTime;
                 this.lastTime = this.time;
 
@@ -102,6 +102,7 @@ module PIXI {
         }
 
         start():Game {
+            last = Date.now();
             this._animate();
             return this;
         }
