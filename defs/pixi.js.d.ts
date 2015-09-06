@@ -1543,6 +1543,7 @@ declare module PIXI {
         }
         export class Loader extends EventEmitter {
 
+            static _pixiMiddleware:any[];
             constructor(baseUrl?: string, concurrency?: number);
 
             baseUrl: string;
