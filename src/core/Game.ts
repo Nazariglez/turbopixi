@@ -14,7 +14,8 @@ module PIXI {
         height:600,
         useWebAudio: true,
         usePersistantData: false,
-        gameScaleType: GAME_SCALE_TYPE.NONE
+        gameScaleType: GAME_SCALE_TYPE.NONE,
+        stopAtLostFocus: true
     };
 
     export class Game {
@@ -61,6 +62,10 @@ module PIXI {
             if(config.gameScaleType !== GAME_SCALE_TYPE.NONE){
                 this.autoResize(config.gameScaleType);
             }
+
+            if(config.stopAtLostFocus){
+                this.enableStopAtLostFocus();
+            }
         }
 
         private _animate():void {
@@ -103,6 +108,34 @@ module PIXI {
 
         stop():Game {
             window.cancelAnimationFrame(this.raf);
+            return this;
+        }
+
+        enableStopAtLostFocus(state:boolean = true):Game{
+            if(state){
+                document.addEventListener(Device.getVisibilityChangeEvent(), this._onVisibilityChange.bind(this));
+            }else{
+                document.removeEventListener(Device.getVisibilityChangeEvent(), this._onVisibilityChange);
+            }
+            return this;
+        }
+
+        disableStopAtLostFocus():Game{
+            return this.enableStopAtLostFocus(false);
+        }
+
+        private _onVisibilityChange(){
+            var isHide = !!(document.hidden || document.webkitHidden || document.mozHidden || document.msHidden);
+            if(isHide){
+                this.stop();
+            }else{
+                this.start();
+            }
+
+            this.onLostFocus(isHide);
+        }
+
+        onLostFocus(isHide:boolean):Game{
             return this;
         }
 
@@ -243,6 +276,7 @@ module PIXI {
         useWebAudio?:boolean;
         usePersistantData?:boolean;
         gameScaleType?:number;
+        stopAtLostFocus?:boolean;
     }
 }
 

@@ -138,6 +138,18 @@ module PIXI {
             }
         },
 
+        getVisibilityChangeEvent: function(){
+            if(typeof document.hidden !== 'undefined'){
+                return 'visibilitychange';
+            }else if(typeof document.webkitHidden !== 'undefined'){
+                return 'webkitvisibilitychange';
+            }else if(typeof document.mozHidden !== 'undefined'){
+                return 'mozvisibilitychange';
+            }else if(typeof document.msHidden !== 'undefined'){
+                return 'msvisibilitychange';
+            }
+        },
+
         get isOnline() {
             return window.navigator.onLine;
         }
@@ -196,6 +208,8 @@ module PIXI {
         getMouseWheelEvent():string;
 
         vibrate(value:number):void;
+
+        getVisibilityChangeEvent():string;
     }
 }
 
@@ -228,6 +242,8 @@ interface Document {
     webkitCancelFullScreen():fullScreenData ;
     msCancelFullScreen():fullScreenData ;
     mozCancelFullScreen():fullScreenData ;
+    webkitHidden:any;
+    mozHidden:any;
 }
 
 interface HTMLDivElement {
