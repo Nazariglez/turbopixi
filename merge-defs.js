@@ -8,7 +8,7 @@ var outro = "\n\n}" +
         "\n    export = PIXI;" +
         "\n}";
 
-function merge(output, files, callback){
+function merge(output, files){
     var regex = /\s*(declare)?\s*module\s?PIXI\s*\{/g;
 
     var content = [];
@@ -28,7 +28,7 @@ function merge(output, files, callback){
         }
     }
 
-    fs.writeFile(output, intro + definitions + outro, "utf8", callback);
+    fs.writeFileSync(output, intro + definitions + outro, "utf8");
 }
 
 function getBlock(file, line){
