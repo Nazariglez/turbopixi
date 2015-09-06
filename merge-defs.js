@@ -2,13 +2,13 @@ var fs = require('fs'),
     path = require('path');
 
 var intro = "declare module PIXI {";
-var outro = "\n}" +
+var outro = "\n\n}" +
         "\n\n" +
         "declare module 'pixi.js' {" +
         "\n    export = PIXI;" +
         "\n}";
 
-function merge(files){
+function merge(output, files, callback){
     var regex = /\s*(declare)?\s*module\s?PIXI\s*\{/g;
 
     var content = [];
@@ -28,11 +28,7 @@ function merge(files){
         }
     }
 
-    fs.writeFileSync('./bin/turbopixi.test.d.ts', intro + definitions + outro, "utf8", function(err, data){
-        if(err){
-            return console.log(err);
-        }
-    });
+    fs.writeFile(output, intro + definitions + outro, "utf8", callback);
 }
 
 function getBlock(file, line){
@@ -64,7 +60,4 @@ function getSpaces(num){
     return spaces;
 }
 
-merge([
-    "./defs/pixi.js.d.ts",
-    "./bin/turbopixi.d.ts"
-]);
+module.exports = merge;
