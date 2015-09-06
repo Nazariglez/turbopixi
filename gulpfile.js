@@ -30,7 +30,23 @@ gulp.task('default', function(){
 });
 
 gulp.task('compile', function(){
-    runSequence('compile-js', 'create-def');
+    runSequence('compile-js', 'create-def', 'clean-def');
+});
+
+gulp.task('create-def', function(){
+    mergeDefs(
+        './bin/turbopixi.d.ts',
+
+        [
+            "./defs/pixi.js.d.ts",
+            "./bin/tmp.turbopixi.d.ts"
+        ],
+
+        function(err){
+            if(err)return console.log(err);
+        });
+
+    return gulp.src(''); //avoid runSequence leak error
 });
 
 gulp.task('compile-js', function(){
@@ -58,22 +74,7 @@ gulp.task('compile-js', function(){
         tsResult.dts.pipe(concat('tmp.turbopixi.d.ts'))
             .pipe(stripComments())
             .pipe(gulp.dest('./bin'))
-        ]);
-});
-
-gulp.task('create-def', function(){
-    mergeDefs(
-        './bin/turbopixi.d.ts',
-
-        [
-            "./defs/pixi.js.d.ts",
-            "./bin/tmp.turbopixi.d.ts"
-        ],
-
-        function(err){
-            if(err)return console.log(err);
-            runSequence('clean-def');
-        });
+    ]);
 });
 
 gulp.task('clean-def', function(){
@@ -84,13 +85,13 @@ gulp.task('clean-def', function(){
 gulp.task('watch', function(){
     return gulp.src('./src/**/*.ts')
         .pipe(watch('./src/**/*.ts', function(){
-            runSequence('compile');
+            runSequence('compile-js', 'create-def', 'clean-def');
         }));
 });
 
 
 
-//private tasks to watch my custom changes in pixi definition
+//private tasks to watch my custom changes in pixi definitions
 gulp.task('watch-defs', function(){
     gulp.watch('../pixi-typescript/pixi.js.d.ts', ['get-defs']);
 });
