@@ -1,5 +1,4 @@
 .idea/
-test.js
-test.html
+test/
 node_modules/
 npm-debug.log
