@@ -1615,6 +1615,7 @@ declare module PIXI {
       xhrType: string;
       error: Error;
       xhr: XMLHttpRequest;
+      bitmapFont:any;
       
       complete(): void;
       load(cb?: () => void): void;
@@ -1813,6 +1814,7 @@ declare module PIXI {
     game: Game;
     constructor(game: Game);
   }
+  function bitmapFontParserTXT(): (resource: loaders.Resource, next: Function) => any;
   class Game {
     id: string;
     raf: any;
