@@ -1,6 +1,6 @@
 module PIXI {
-    export function bitmapFontParserTXT(){
-        return function(resource: PIXI.loaders.Resource, next:Function){
+    export function bitmapFontParserTXT():Function{
+        return function(resource: PIXI.loaders.Resource, next:Function):void{
 
             //skip if no data or if not txt
             if(!resource.data || resource.xhrType !== "text"){
