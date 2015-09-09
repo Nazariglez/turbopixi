@@ -1620,6 +1620,7 @@ declare module PIXI {
             xhrType: string;
             error: Error;
             xhr: XMLHttpRequest;
+            bitmapFont:any;
 
             complete(): void;
             load(cb?: () => void): void;

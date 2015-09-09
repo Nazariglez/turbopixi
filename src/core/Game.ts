@@ -3,6 +3,7 @@
 ///<reference path="../display/Scene.ts" />
 ///<reference path="../audio/AudioManager.ts" />
 ///<reference path="../input/InputManager.ts" />
+///<reference path="../loader/Loader.ts" />
 ///<reference path="./DataManager.ts" />
 module PIXI {
     var last:number = 0;
