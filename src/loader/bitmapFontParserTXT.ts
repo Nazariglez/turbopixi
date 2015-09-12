@@ -3,11 +3,11 @@ module PIXI {
         return function(resource: PIXI.loaders.Resource, next:Function):void{
 
             //skip if no data or if not txt
-            if(!resource.data || resource.xhrType !== "text"){
+            if(!resource.data || (resource.xhrType !== "text" && resource.xhrType !== "document")){
                 return next();
             }
 
-            var text:string = resource.data;
+            var text:string = (resource.xhrType === "text") ? resource.data : resource.xhr.responseText;
 
             //skip if not a bitmap font data
             if( text.indexOf("page") === -1 ||
@@ -35,7 +35,7 @@ module PIXI {
                 url += '/';
             }
 
-            var textureUrl:string = getTextureUrl(url, resource.data);
+            var textureUrl:string = getTextureUrl(url, text);
             if(utils.TextureCache[textureUrl]){
                 parse(resource, utils.TextureCache[textureUrl]);
                 next();
@@ -64,7 +64,8 @@ module PIXI {
                 chars : {}
             };
 
-        var lines:string[] = resource.data.split('\n');
+        var text:string = (resource.xhrType === "text") ? resource.data : resource.xhr.responseText;
+        var lines:string[] = text.split('\n');
 
         for(var i:number = 0; i < lines.length; i++){
             if(lines[i].indexOf("info") === 0){
@@ -111,10 +112,10 @@ module PIXI {
 
                 data.chars[second].kerning[first] = parseInt(attr.amount);
             }
-
-            resource.bitmapFont = data;
-            extras.BitmapText.fonts[data.font] = data;
         }
+
+        resource.bitmapFont = data;
+        extras.BitmapText.fonts[data.font] = data;
     }
 
     function dirname(path:string):string{
@@ -144,7 +145,7 @@ module PIXI {
 
         for(var i:number = 0; i < attr.length; i++){
             var d:string[] = attr[i].split('=');
-            var m:string[] = d[1].match(regex);
+            var m:RegExpMatchArray = d[1].match(regex);
             if(m && m.length >= 1){
                 d[1] = d[1].substr(1, d[1].length-2);
             }
