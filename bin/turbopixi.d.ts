@@ -1101,6 +1101,7 @@ declare module PIXI {
   export class utils {
     
     static uuid(): number;
+    static uid(): number;
     static hex2rgb(hex: number, out?: number[]): number[];
     static hex2String(hex: number): string;
     static rbg2hex(rgb: Number[]): number;
@@ -1605,6 +1606,8 @@ declare module PIXI {
       };
       
       constructor(name?: string, url?: string | string[], options?: LoaderOptions);
+      static setExtensionLoadType(ext:string, type:number):void;
+      static setExtensionXhrType(ext:string, type:number):void;
       
       name: string;
       texture: Texture;
@@ -1740,69 +1743,26 @@ declare module PIXI {
     HTMLAUDIO = 2,
   }
   class AudioManager {
-    game: Game;
+    private game;
+    soundMaxLines: number;
+    musicMaxLines: number;
+    musicMuted: boolean;
+    soundMuted: boolean;
+    context: AudioContext;
     constructor(game: Game);
   }
-  class DataManager {
-    game: Game;
-    usePersistantData: boolean;
-    private _data;
-    constructor(game: Game, usePersitantData?: boolean);
-    load(): DataManager;
-    save(): DataManager;
-    reset(): DataManager;
-    set(key: string | Object, value?: any): DataManager;
-    get(key?: string): any;
-    del(key: string): DataManager;
+  class Audio {
+    source: any;
+    id: string;
+    loop: boolean;
+    volume: number;
+    muted: boolean;
+    manager: AudioManager;
+    constructor(source: any, id: string);
   }
-  var Device: DeviceData;
-  interface DeviceData {
-    isChrome: boolean;
-    isFirefox: boolean;
-    isIE: boolean;
-    isOpera: boolean;
-    isSafari: boolean;
-    isIphone: boolean;
-    isIpad: boolean;
-    isIpod: boolean;
-    isAndroid: boolean;
-    isAndroidPhone: boolean;
-    isAndroidTablet: boolean;
-    isLinux: boolean;
-    isMac: boolean;
-    isWindow: boolean;
-    isWindowPhone: boolean;
-    isWindowTablet: boolean;
-    isMobile: boolean;
-    isTablet: boolean;
-    isDesktop: boolean;
-    isTouchDevice: boolean;
-    isCocoon: boolean;
-    isNodeWebkit: boolean;
-    isEjecta: boolean;
-    isCordova: boolean;
-    isCrosswalk: boolean;
-    isElectron: boolean;
-    isAtomShell: boolean;
-    hasVibrate: boolean;
-    hasMouseWheel: boolean;
-    hasFullScreen: boolean;
-    hasAccelerometer: boolean;
-    hasGamepad: boolean;
-    fullScreenRequest: fullScreenData;
-    fullScreenCancel: fullScreenData;
-    hasAudio: boolean;
-    hasHTMLAudio: boolean;
-    hasWebAudio: boolean;
-    webAudioContext: any;
-    hasMp3: boolean;
-    hasM4a: boolean;
-    hasOgg: boolean;
-    hasWav: boolean;
-    isOnline: boolean;
-    getMouseWheelEvent(): string;
-    vibrate(value: number): void;
-    getVisibilityChangeEvent(): string;
+  class AudioLine {
+    manager: AudioManager;
+    constructor(manager: AudioManager);
   }
   class Scene extends Container {
     id: string;
@@ -1810,11 +1770,41 @@ declare module PIXI {
     constructor(id?: string);
     addTo(game: Game | Container): Scene;
   }
+  class DataManager {
+    private game;
+    usePersistantData: boolean;
+    private _data;
+    constructor(game: Game, usePersistantData?: boolean);
+    load(): DataManager;
+    save(): DataManager;
+    reset(): DataManager;
+    set(key: string | Object, value?: any): DataManager;
+    get(key?: string): any;
+    del(key: string): DataManager;
+  }
+  module Device {
+    var isChrome: boolean, isFirefox: boolean, isIE: boolean, isOpera: boolean, isSafari: boolean;
+    var isIphone: boolean, isIpad: boolean, isIpod: boolean, isAndroid: boolean, isAndroidPhone: boolean, isAndroidTablet: boolean, isLinux: boolean, isMac: boolean, isWindow: boolean, isWindowPhone: boolean, isWindowTablet: boolean, isMobile: boolean, isTablet: boolean, isDesktop: boolean, isTouchDevice: boolean, isCocoon: boolean, isNodeWebkit: boolean, isEjecta: boolean, isCrosswalk: boolean, isCordova: boolean, isElectron: boolean;
+    var isVibrateSupported: boolean, isMouseWheelSupported: boolean, isAccelerometerSupported: boolean, isGamepadSupported: boolean;
+    var isFullScreenSupported: boolean, fullScreenRequest: string, fullScreenCancel: string;
+    var isHTMLAudioSupported: boolean, webAudioContext: any, isWebAudioSupported: boolean, isAudioSupported: boolean, isMp3Supported: boolean, isOggSupported: boolean, isWavSupported: boolean, isM4aSupported: boolean, globalWebAudioContext: AudioContext;
+    function getMouseWheelEvent(): string;
+    function vibrate(pattern: number | number[]): void;
+    function getVisibilityChangeEvent(): string;
+    function isOnline(): boolean;
+  }
   class InputManager {
-    game: Game;
+    private game;
     constructor(game: Game);
   }
-  function bitmapFontParserTXT(): (resource: loaders.Resource, next: Function) => any;
+  function bitmapFontParserTXT(): Function;
+  function audioParser(): Function;
+  module utils {
+    var _audioTypeSelected: number;
+    var AudioCache: any;
+  }
+  module loaders {
+  }
   class Game {
     id: string;
     raf: any;
