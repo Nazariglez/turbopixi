@@ -1,13 +1,8 @@
 module PIXI {
     export class DataManager{
-        game:Game;
-        usePersistantData:boolean;
-
         private _data:any;
 
-        constructor(game:Game, usePersitantData:boolean = false){
-            this.game = game;
-            this.usePersistantData = usePersitantData;
+        constructor(private game:Game, public usePersistantData:boolean = false){
             this.load();
         }
 

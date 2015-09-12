@@ -1,9 +1,17 @@
 module PIXI {
     export class AudioManager{
-        game:Game;
+        soundMaxLines:number = 10;
+        musicMaxLines:number = 1;
 
-        constructor(game: Game){
-            this.game = game;
+        musicMuted:boolean = false;
+        soundMuted:boolean = false;
+
+        context:AudioContext;
+
+        constructor(private game: Game){
+            if(utils._audioTypeSelected === AUDIO_TYPE.WEBAUDIO) {
+                this.context = Device.globalWebAudioContext;
+            }
         }
 
     }
