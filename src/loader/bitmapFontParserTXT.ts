@@ -1,6 +1,7 @@
+///<reference path="../../defs/pixi.js.d.ts" />
 module PIXI {
     export function bitmapFontParserTXT():Function{
-        return function(resource: PIXI.loaders.Resource, next:Function):void{
+        return function(resource: loaders.Resource, next:Function):void{
 
             //skip if no data or if not txt
             if(!resource.data || (resource.xhrType !== "text" && resource.xhrType !== "document")){
