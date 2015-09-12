@@ -5,5 +5,6 @@ module PIXI {
         constructor(game: Game){
             this.game = game;
         }
+
     }
 }

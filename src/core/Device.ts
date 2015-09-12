@@ -1,6 +1,5 @@
 //Many checks are based on https://github.com/arasatasaygin/is.js/blob/master/is.js
 
-///<reference path="../../defs/pixi.js.d.ts" />
 module PIXI {
     export module Device {
         var navigator:Navigator = window.navigator;
@@ -62,7 +61,8 @@ module PIXI {
             isMp3Supported:boolean = false,
             isOggSupported:boolean = false,
             isWavSupported:boolean = false,
-            isM4aSupported:boolean = false;
+            isM4aSupported:boolean = false,
+            globalWebAudioContext:AudioContext = (isWebAudioSupported) ? new webAudioContext() : undefined;
 
         //Audio mimeTypes
         if(isAudioSupported){

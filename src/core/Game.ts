@@ -54,7 +54,8 @@ module PIXI {
             document.body.appendChild(this.canvas);
 
             this.isWebGL = (this.renderer.type === RENDERER_TYPE.WEBGL);
-            this.isWebAudio = (Device.isWebAudioSupported&&config.useWebAudio);
+            this.isWebAudio = (Device.isAudioSupported&&Device.isWebAudioSupported&&config.useWebAudio);
+            utils._audioTypeSelected = this.isWebAudio ? AUDIO_TYPE.WEBAUDIO : AUDIO_TYPE.HTMLAUDIO;
 
             this.input = new InputManager(this);
             this.audio = new AudioManager(this);

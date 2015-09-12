@@ -1106,6 +1106,7 @@ declare module PIXI {
     export class utils {
 
         static uuid(): number;
+        static uid(): number;
         static hex2rgb(hex: number, out?: number[]): number[];
         static hex2String(hex: number): string;
         static rbg2hex(rgb: Number[]): number;
@@ -1610,6 +1611,8 @@ declare module PIXI {
             };
 
             constructor(name?: string, url?: string | string[], options?: LoaderOptions);
+            static setExtensionLoadType(ext:string, type:number):void;
+            static setExtensionXhrType(ext:string, type:number):void;
 
             name: string;
             texture: Texture;
