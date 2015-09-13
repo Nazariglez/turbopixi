@@ -1,4 +1,5 @@
 ///<reference path="../../defs/pixi.js.d.ts" />
+///<reference path="../core/const.ts" />
 ///<reference path="./bitmapFontParserTxt.ts" />
 ///<reference path="./audioParser.ts" />
 ///<reference path="../core/Utils.ts" />
@@ -13,6 +14,20 @@ module PIXI {
                 if(Device.isAudioSupported){
                     _checkAudioType();
                 }
+            }
+
+            add(name:any, url?:any ,options?:any, cb?:any):Loader{
+                if(typeof name === 'object'){
+                    if(Object.prototype.toString.call(name.url) === "[object Array]"){
+                        name.url = audioParserUrl(name.url);
+                    }
+                }
+
+                if(Object.prototype.toString.call(url) === "[object Array]"){
+                    url = audioParserUrl(url);
+                }
+                
+                return super.add(name, url, options, cb);
             }
         }
 
