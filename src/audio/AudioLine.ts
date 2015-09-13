@@ -13,8 +13,6 @@ module PIXI {
         lastPauseTime:number = 0;
         offsetTime:number = 0;
 
-        isPaused:boolean = false;
-
         private _htmlAudio:HTMLAudioElement;
         private _webAudio:AudioContext;
 
@@ -106,6 +104,15 @@ module PIXI {
 
             }else{
                 this._htmlAudio.volume = this.audio.volume;
+            }
+            return this;
+        }
+
+        volume(value:number):AudioLine{
+            if(this.manager.context){
+
+            }else{
+                this._htmlAudio.volume = value;
             }
             return this;
         }

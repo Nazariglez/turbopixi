@@ -136,7 +136,6 @@ module PIXI {
             return this._unmute(id, this.soundLines);
         }
 
-
         private _pause(id:string, lines:AudioLine[]):AudioManager{
             if(!id){
                 for(var i:number = 0; i < lines.length; i++){
