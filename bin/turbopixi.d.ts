@@ -1731,6 +1731,31 @@ declare module PIXI {
     }
     
   }
+  class AudioLine {
+    manager: AudioManager;
+    available: boolean;
+    audio: Audio;
+    loop: boolean;
+    paused: boolean;
+    callback: Function;
+    muted: boolean;
+    startTime: number;
+    lastPauseTime: number;
+    offsetTime: number;
+    isPaused: boolean;
+    private _htmlAudio;
+    private _webAudio;
+    constructor(manager: AudioManager);
+    setAudio(audio: Audio, loop: boolean | Function, callback?: Function): AudioLine;
+    play(pause?: boolean): AudioLine;
+    stop(): AudioLine;
+    pause(): AudioLine;
+    resume(): AudioLine;
+    mute(): AudioLine;
+    unmute(): AudioLine;
+    reset(): AudioLine;
+    private _onEnd();
+  }
   enum GAME_SCALE_TYPE {
     NONE = 0,
     FILL = 1,
@@ -1741,46 +1766,6 @@ declare module PIXI {
     UNKNOWN = 0,
     WEBAUDIO = 1,
     HTMLAUDIO = 2,
-  }
-  class AudioManager {
-    private game;
-    soundMaxLines: number;
-    musicMaxLines: number;
-    musicMuted: boolean;
-    soundMuted: boolean;
-    context: AudioContext;
-    constructor(game: Game);
-  }
-  class Audio {
-    source: any;
-    id: string;
-    loop: boolean;
-    volume: number;
-    muted: boolean;
-    manager: AudioManager;
-    constructor(source: any, id: string);
-  }
-  class AudioLine {
-    manager: AudioManager;
-    constructor(manager: AudioManager);
-  }
-  class Scene extends Container {
-    id: string;
-    static _idLen: number;
-    constructor(id?: string);
-    addTo(game: Game | Container): Scene;
-  }
-  class DataManager {
-    private game;
-    usePersistantData: boolean;
-    private _data;
-    constructor(game: Game, usePersistantData?: boolean);
-    load(): DataManager;
-    save(): DataManager;
-    reset(): DataManager;
-    set(key: string | Object, value?: any): DataManager;
-    get(key?: string): any;
-    del(key: string): DataManager;
   }
   module Device {
     var isChrome: boolean, isFirefox: boolean, isIE: boolean, isOpera: boolean, isSafari: boolean;
@@ -1793,17 +1778,36 @@ declare module PIXI {
     function getVisibilityChangeEvent(): string;
     function isOnline(): boolean;
   }
+  class Scene extends Container {
+    id: string;
+    static _idLen: number;
+    constructor(id?: string);
+    addTo(game: Game | Container): Scene;
+  }
   class InputManager {
     private game;
     constructor(game: Game);
   }
   function bitmapFontParserTXT(): Function;
   function audioParser(): Function;
+  function audioParserUrl(resourceUrl: string[]): string;
   module utils {
     var _audioTypeSelected: number;
     var AudioCache: any;
   }
   module loaders {
+  }
+  class DataManager {
+    private game;
+    usePersistantData: boolean;
+    private _data;
+    constructor(game: Game, usePersistantData?: boolean);
+    load(): DataManager;
+    save(): DataManager;
+    reset(): DataManager;
+    set(key: string | Object, value?: any): DataManager;
+    get(key?: string): any;
+    del(key: string): DataManager;
   }
   class Game {
     id: string;
@@ -1855,6 +1859,51 @@ declare module PIXI {
     stopAtLostFocus?: boolean;
     assetsUrl?: string;
     loaderConcurrency?: number;
+    soundMaxLines?: number;
+    musicMaxLines?: number;
+  }
+  class AudioManager {
+    private soundMaxLines;
+    private musicMaxLines;
+    soundLines: AudioLine[];
+    musicLines: AudioLine[];
+    private _tempLines;
+    musicMuted: boolean;
+    soundMuted: boolean;
+    context: AudioContext;
+    gainNode: AudioNode;
+    constructor(soundMaxLines?: number, musicMaxLines?: number);
+    pauseAllLines(): AudioManager;
+    resumeAllLines(): AudioManager;
+    playMusic(id: string, loop?: boolean | Function, callback?: Function): AudioManager;
+    playSound(id: string, loop?: boolean | Function, callback?: Function): AudioManager;
+    stopMusic(id?: string): AudioManager;
+    stopSound(id?: string): AudioManager;
+    pauseMusic(id?: string): AudioManager;
+    pauseSound(id?: string): AudioManager;
+    resumeMusic(id?: string): AudioManager;
+    resumeSound(id?: string): AudioManager;
+    muteMusic(id?: string): AudioManager;
+    muteSound(id?: string): AudioManager;
+    unmuteMusic(id?: string): AudioManager;
+    unmuteSound(id?: string): AudioManager;
+    private _pause(id, lines);
+    private _resume(id, lines);
+    private _play(id, lines, loop?, callback?);
+    private _stop(id, lines);
+    private _mute(id, lines);
+    private _unmute(id, lines);
+    private _getLinesById(id, lines);
+    private _getAvailableLineFrom(lines);
+  }
+  class Audio {
+    source: any;
+    id: string;
+    loop: boolean;
+    volume: number;
+    muted: boolean;
+    manager: AudioManager;
+    constructor(source: any, id: string);
   }
 
 }
