@@ -26,7 +26,7 @@ module PIXI {
                 if(Object.prototype.toString.call(url) === "[object Array]"){
                     url = audioParserUrl(url);
                 }
-                
+
                 return super.add(name, url, options, cb);
             }
         }
