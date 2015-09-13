@@ -4,6 +4,7 @@ module PIXI {
     export class AudioManager{
         soundLines:AudioLine[] = [];
         musicLines:AudioLine[] = [];
+        normalLines:AudioLine[] = [];
         private _tempLines:AudioLine[] = [];
 
         musicMuted:boolean = false;
@@ -12,7 +13,7 @@ module PIXI {
         context:AudioContext;
         gainNode:AudioNode;
 
-        constructor(private soundMaxLines:number = 10, private musicMaxLines:number = 1){
+        constructor(private audioChannelLines:number = 10, private soundChannelLines:number = 10, private musicChannelLines:number = 1){
             if(utils._audioTypeSelected === AUDIO_TYPE.WEBAUDIO) {
                 this.context = Device.globalWebAudioContext;
                 this.gainNode = _createGainNode(this.context);
@@ -20,13 +21,23 @@ module PIXI {
             }
 
             var i:number;
-            for(i = 0; i < this.soundMaxLines; i++){
+            for(i = 0; i < this.audioChannelLines; i++){
+                this.normalLines.push(new AudioLine(this));
+            }
+
+            for(i = 0; i < this.soundChannelLines; i++){
                 this.soundLines.push(new AudioLine(this));
             }
 
-            for(i = 0; i < this.musicMaxLines; i++){
+            for(i = 0; i < this.musicChannelLines; i++){
                 this.musicLines.push(new AudioLine(this));
             }
+        }
+
+        getAudio(id:string):Audio{
+            var audio:Audio = utils.AudioCache[id];
+            audio.manager = this;
+            return audio;
         }
 
         pauseAllLines():AudioManager {
@@ -39,6 +50,14 @@ module PIXI {
             this.resumeMusic();
             this.resumeSound();
             return this;
+        }
+
+        play(id:string, loop?:boolean|Function, callback?:Function):AudioManager{
+            if(typeof loop === "function"){
+                callback = <Function>loop;
+                loop = false;
+            }
+            return this._play(id, this.normalLines, <boolean>loop, callback);
         }
 
         playMusic(id:string, loop?:boolean|Function, callback?:Function):AudioManager{
@@ -57,12 +76,20 @@ module PIXI {
             return this._play(id, this.soundLines, <boolean>loop, callback);
         }
 
+        stop(id?:string):AudioManager{
+            return this._stop(id, this.normalLines);
+        }
+
         stopMusic(id?:string):AudioManager{
             return this._stop(id, this.musicLines);
         }
 
         stopSound(id?:string):AudioManager{
             return this._stop(id, this.soundLines);
+        }
+
+        pause(id?:string):AudioManager{
+            return this._pause(id, this.normalLines);
         }
 
         pauseMusic(id?:string):AudioManager{
@@ -73,6 +100,10 @@ module PIXI {
             return this._pause(id, this.soundLines);
         }
 
+        resume(id?:string):AudioManager{
+            return this._resume(id, this.normalLines);
+        }
+
         resumeMusic(id?:string):AudioManager{
             return this._resume(id, this.musicLines);
         }
@@ -81,12 +112,20 @@ module PIXI {
             return this._resume(id, this.soundLines);
         }
 
+        mute(id?:string):AudioManager{
+            return this._mute(id, this.normalLines);
+        }
+
         muteMusic(id?:string):AudioManager{
             return this._mute(id, this.musicLines);
         }
 
         muteSound(id?:string):AudioManager{
             return this._mute(id, this.soundLines);
+        }
+
+        unmute(id?:string):AudioManager{
+            return this._unmute(id, this.normalLines);
         }
 
         unmuteMusic(id?:string):AudioManager{
@@ -145,7 +184,7 @@ module PIXI {
                 return this;
             }
 
-            var audio:Audio = utils.AudioCache[id];
+            var audio:Audio = this.getAudio(id);
             if(!audio){
                 console.error('Audio (' + id + ') not found.');
                 return this;

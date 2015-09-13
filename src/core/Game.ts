@@ -20,8 +20,9 @@ module PIXI {
         stopAtLostFocus: true,
         assetsUrl: "./",
         loaderConcurrency: 10,
-        soundMaxLines: 10,
-        musicMaxLines: 1
+        audioChannelLines: 10,
+        soundChannelLines: 10,
+        musicChannelLines: 1
     };
 
     export class Game {
@@ -61,7 +62,7 @@ module PIXI {
             utils._audioTypeSelected = this.isWebAudio ? AUDIO_TYPE.WEBAUDIO : AUDIO_TYPE.HTMLAUDIO;
 
             this.input = new InputManager(this);
-            this.audio = new AudioManager(config.soundMaxLines, config.musicMaxLines);
+            this.audio = new AudioManager(config.audioChannelLines, config.soundChannelLines, config.musicChannelLines);
             this.data = new DataManager(this, config.usePersistantData);
             this.loader = new loaders.Loader(config.assetsUrl, config.loaderConcurrency);
 
@@ -289,8 +290,9 @@ module PIXI {
         stopAtLostFocus?:boolean;
         assetsUrl?:string;
         loaderConcurrency?:number;
-        soundMaxLines?:number;
-        musicMaxLines?:number;
+        audioChannelLines?:number;
+        soundChannelLines?:number;
+        musicChannelLines?:number;
     }
 }
 
