@@ -2,18 +2,18 @@ module PIXI {
     export class DataManager{
         private _data:any;
 
-        constructor(private game:Game, public usePersistantData:boolean = false){
+        constructor(private id:string, public usePersistantData:boolean = false){
             this.load();
         }
 
         load():DataManager{
-            this._data = JSON.parse(localStorage.getItem(this.game.id)) || {};
+            this._data = JSON.parse(localStorage.getItem(this.id)) || {};
             return this;
         }
 
         save():DataManager{
             if(this.usePersistantData){
-                localStorage.setItem(this.game.id, JSON.stringify(this._data));
+                localStorage.setItem(this.id, JSON.stringify(this._data));
             }
             return this;
         }

@@ -1798,10 +1798,10 @@ declare module PIXI {
   module loaders {
   }
   class DataManager {
-    private game;
+    private id;
     usePersistantData: boolean;
     private _data;
-    constructor(game: Game, usePersistantData?: boolean);
+    constructor(id: string, usePersistantData?: boolean);
     load(): DataManager;
     save(): DataManager;
     reset(): DataManager;

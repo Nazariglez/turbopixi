@@ -63,7 +63,7 @@ module PIXI {
 
             this.input = new InputManager(this);
             this.audio = new AudioManager(config.audioChannelLines, config.soundChannelLines, config.musicChannelLines);
-            this.data = new DataManager(this, config.usePersistantData);
+            this.data = new DataManager(this.id, config.usePersistantData);
             this.loader = new loaders.Loader(config.assetsUrl, config.loaderConcurrency);
 
             var initialScene:Scene = new Scene('initial').addTo(this);
