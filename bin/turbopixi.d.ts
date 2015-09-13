@@ -1742,7 +1742,6 @@ declare module PIXI {
     startTime: number;
     lastPauseTime: number;
     offsetTime: number;
-    isPaused: boolean;
     private _htmlAudio;
     private _webAudio;
     constructor(manager: AudioManager);
@@ -1753,6 +1752,7 @@ declare module PIXI {
     resume(): AudioLine;
     mute(): AudioLine;
     unmute(): AudioLine;
+    volume(value: number): AudioLine;
     reset(): AudioLine;
     private _onEnd();
   }
@@ -1859,32 +1859,42 @@ declare module PIXI {
     stopAtLostFocus?: boolean;
     assetsUrl?: string;
     loaderConcurrency?: number;
-    soundMaxLines?: number;
-    musicMaxLines?: number;
+    audioChannelLines?: number;
+    soundChannelLines?: number;
+    musicChannelLines?: number;
   }
   class AudioManager {
-    private soundMaxLines;
-    private musicMaxLines;
+    private audioChannelLines;
+    private soundChannelLines;
+    private musicChannelLines;
     soundLines: AudioLine[];
     musicLines: AudioLine[];
+    normalLines: AudioLine[];
     private _tempLines;
     musicMuted: boolean;
     soundMuted: boolean;
     context: AudioContext;
     gainNode: AudioNode;
-    constructor(soundMaxLines?: number, musicMaxLines?: number);
+    constructor(audioChannelLines?: number, soundChannelLines?: number, musicChannelLines?: number);
+    getAudio(id: string): Audio;
     pauseAllLines(): AudioManager;
     resumeAllLines(): AudioManager;
+    play(id: string, loop?: boolean | Function, callback?: Function): AudioManager;
     playMusic(id: string, loop?: boolean | Function, callback?: Function): AudioManager;
     playSound(id: string, loop?: boolean | Function, callback?: Function): AudioManager;
+    stop(id?: string): AudioManager;
     stopMusic(id?: string): AudioManager;
     stopSound(id?: string): AudioManager;
+    pause(id?: string): AudioManager;
     pauseMusic(id?: string): AudioManager;
     pauseSound(id?: string): AudioManager;
+    resume(id?: string): AudioManager;
     resumeMusic(id?: string): AudioManager;
     resumeSound(id?: string): AudioManager;
+    mute(id?: string): AudioManager;
     muteMusic(id?: string): AudioManager;
     muteSound(id?: string): AudioManager;
+    unmute(id?: string): AudioManager;
     unmuteMusic(id?: string): AudioManager;
     unmuteSound(id?: string): AudioManager;
     private _pause(id, lines);
@@ -1900,10 +1910,17 @@ declare module PIXI {
     source: any;
     id: string;
     loop: boolean;
-    volume: number;
+    private _volume;
     muted: boolean;
     manager: AudioManager;
     constructor(source: any, id: string);
+    play(loop?: boolean | Function, callback?: Function): Audio;
+    stop(): Audio;
+    mute(): Audio;
+    unmute(): Audio;
+    pause(): Audio;
+    resume(): Audio;
+    volume: number;
   }
 
 }
