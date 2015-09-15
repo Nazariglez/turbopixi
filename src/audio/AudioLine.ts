@@ -51,13 +51,11 @@ module PIXI {
                 this._webAudio.onended = this._onEnd.bind(this);
 
                 this._webAudio.gainNode = this.manager.createGainNode(this.manager.context);
-                this._webAudio.gainNode.value = (this.audio.muted || this.muted) ? 0 : this.audio.volume;
+                this._webAudio.gainNode.gain.value = (this.audio.muted || this.muted) ? 0 : this.audio.volume;
                 this._webAudio.gainNode.connect(this.manager.gainNode);
 
                 this._webAudio.connect(this._webAudio.gainNode);
                 this._webAudio.start(0, (pause) ? this.lastPauseTime : null);
-
-                console.log(this._webAudio, this._webAudio.gainNode.value);
             }else{
                 this._htmlAudio.src = (this.audio.source.src !== "") ? this.audio.source.src : this.audio.source.children[0].src;
                 this._htmlAudio.preload = "auto";
@@ -83,7 +81,9 @@ module PIXI {
 
         pause():AudioLine{
             if(this.manager.context){
-
+                this.offsetTime += this.manager.context.currentTime - this.startTime;
+                this.lastPauseTime = this.offsetTime%this._webAudio.buffer.duration;
+                this._webAudio.stop(0);
             }else{
                 this._htmlAudio.pause();
             }
@@ -94,7 +94,7 @@ module PIXI {
         resume():AudioLine{
             if(this.paused){
                 if(this.manager.context){
-
+                    this.play(true);
                 }else{
                     this._htmlAudio.play();
                 }
@@ -107,7 +107,7 @@ module PIXI {
         mute():AudioLine{
             this.muted = true;
             if(this.manager.context){
-
+                this._webAudio.gainNode.gain.value = 0;
             }else{
                 this._htmlAudio.volume = 0;
             }
@@ -116,9 +116,8 @@ module PIXI {
 
         unmute():AudioLine{
             this.muted = false;
-            this.muted = true;
             if(this.manager.context){
-
+                this._webAudio.gainNode.gain.value = this.audio.volume;
             }else{
                 this._htmlAudio.volume = this.audio.volume;
             }
@@ -127,7 +126,7 @@ module PIXI {
 
         volume(value:number):AudioLine{
             if(this.manager.context){
-
+                this._webAudio.gainNode.gain.value = value;
             }else{
                 this._htmlAudio.volume = value;
             }
@@ -151,8 +150,6 @@ module PIXI {
 
         private _onEnd():void{
             if(this.callback)this.callback(this.manager, this.audio);
-
-            console.log('end')
             if(!this.manager.context){
                 if(this.loop || this.audio.loop){
                     this._htmlAudio.currentTime = 0;
@@ -172,5 +169,5 @@ interface AudioBufferSourceNode {
     noteOn():AudioBufferSourceNode;
     noteOff():AudioBufferSourceNode;
     source:AudioBuffer;
-    gainNode:any;
+    gainNode:GainNode;
 }
