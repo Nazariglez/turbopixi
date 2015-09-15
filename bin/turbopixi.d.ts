@@ -1905,6 +1905,7 @@ declare module PIXI {
     private _unmute(id, lines);
     private _getLinesById(id, lines);
     private _getAvailableLineFrom(lines);
+    createGainNode(ctx: AudioContext): GainNode;
   }
   class Audio {
     source: any;

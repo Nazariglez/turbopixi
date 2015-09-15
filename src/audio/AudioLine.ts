@@ -14,7 +14,7 @@ module PIXI {
         offsetTime:number = 0;
 
         private _htmlAudio:HTMLAudioElement;
-        private _webAudio:AudioContext;
+        private _webAudio:AudioBufferSourceNode;
 
         constructor(public manager:AudioManager){
             if(!this.manager.context){
@@ -40,7 +40,24 @@ module PIXI {
             if(!pause && this.paused)return this;
 
             if(this.manager.context){
+                this._webAudio = this.manager.context.createBufferSource();
+                this._webAudio.start = this._webAudio.start || this._webAudio.noteOn;
+                this._webAudio.stop = this._webAudio.stop || this._webAudio.noteOff;
 
+                this._webAudio.buffer = this.audio.source;
+                this._webAudio.loop = this.loop || this.audio.loop;
+                this.startTime = this.manager.context.currentTime;
+
+                this._webAudio.onended = this._onEnd.bind(this);
+
+                this._webAudio.gainNode = this.manager.createGainNode(this.manager.context);
+                this._webAudio.gainNode.value = (this.audio.muted || this.muted) ? 0 : this.audio.volume;
+                this._webAudio.gainNode.connect(this.manager.gainNode);
+
+                this._webAudio.connect(this._webAudio.gainNode);
+                this._webAudio.start(0, (pause) ? this.lastPauseTime : null);
+
+                console.log(this._webAudio, this._webAudio.gainNode.value);
             }else{
                 this._htmlAudio.src = (this.audio.source.src !== "") ? this.audio.source.src : this.audio.source.children[0].src;
                 this._htmlAudio.preload = "auto";
@@ -54,7 +71,7 @@ module PIXI {
 
         stop():AudioLine {
             if(this.manager.context){
-
+                this._webAudio.stop(0);
             }else{
                 this._htmlAudio.pause();
                 this._htmlAudio.currentTime = 0;
@@ -135,6 +152,7 @@ module PIXI {
         private _onEnd():void{
             if(this.callback)this.callback(this.manager, this.audio);
 
+            console.log('end')
             if(!this.manager.context){
                 if(this.loop || this.audio.loop){
                     this._htmlAudio.currentTime = 0;
@@ -147,4 +165,12 @@ module PIXI {
             }
         }
     }
+
+}
+
+interface AudioBufferSourceNode {
+    noteOn():AudioBufferSourceNode;
+    noteOff():AudioBufferSourceNode;
+    source:AudioBuffer;
+    gainNode:any;
 }

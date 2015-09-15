@@ -16,7 +16,7 @@ module PIXI {
         constructor(private audioChannelLines:number = 10, private soundChannelLines:number = 10, private musicChannelLines:number = 1){
             if(utils._audioTypeSelected === AUDIO_TYPE.WEBAUDIO) {
                 this.context = Device.globalWebAudioContext;
-                this.gainNode = _createGainNode(this.context);
+                this.gainNode = this.createGainNode(this.context);
                 this.gainNode.connect(this.context.destination);
             }
 
@@ -276,10 +276,10 @@ module PIXI {
             return l;
         }
 
-    }
+        createGainNode(ctx:AudioContext):GainNode{
+            return ctx.createGain ? ctx.createGain() : ctx.createGainNode();
+        }
 
-    function _createGainNode(ctx:AudioContext):GainNode{
-        return ctx.createGain ? ctx.createGain() : ctx.createGainNode();
     }
 }
 
