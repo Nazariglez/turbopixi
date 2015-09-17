@@ -134,6 +134,7 @@ declare module PIXI {
         direction: number;
         velocity: Point;
         rotationSpeed: number;
+        zIndex: number;
 
         position: Point;
         scale: Point;
@@ -234,10 +235,11 @@ declare module PIXI {
         destroy(destroyChildren?: boolean): void;
         generateTexture(renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer, resolution?: number, scaleMode?: number): Texture;
 
-        update(deltaTime: number): DisplayObject;
-        addTo(parent: Container): DisplayObject;
-        kill(): DisplayObject;
-        remove(): DisplayObject;
+        update(deltaTime: number): Container;
+        addTo(parent: Container): Container;
+        kill(): Container;
+        remove(): Container;
+        sortChildrenByZIndex():Container;
 
         renderWebGL(renderer: WebGLRenderer): void;
         renderCanvas(renderer: CanvasRenderer): void;
