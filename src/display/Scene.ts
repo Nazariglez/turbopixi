@@ -1,12 +1,15 @@
 ///<reference path="../../defs/pixi.js.d.ts" />
+///<reference path="../core/Game.ts" />
+///<reference path="./Camera.ts" />
 module PIXI {
     export class Scene extends Container {
-        id:string;
+        camera:Camera;
         static _idLen:number = 0;
 
-        constructor(id:string = ("scene" + Scene._idLen++) ){
+        constructor(public id:string = ("scene" + Scene._idLen++) ){
             super();
-            this.id = id;
+            this.camera = new Camera();
+            this.camera.addTo(this);
         }
 
         addTo(game:Game|Container):Scene {
@@ -17,5 +20,6 @@ module PIXI {
             }
             return this;
         }
+
     }
 }
