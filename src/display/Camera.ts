@@ -1,7 +1,8 @@
 ///<reference path="../../defs/pixi.js.d.ts" />
 module PIXI {
     export class Camera extends Container {
-        enabled:boolean = false;
+        visible:boolean = false;
+        _enabled:boolean = false;
         zIndex:number = Infinity;
         constructor(){
             super();
@@ -14,6 +15,15 @@ module PIXI {
 
             super.update(deltaTime);
             return this;
+        }
+
+        get enabled():boolean{
+            return this._enabled;
+        }
+
+        set enabled(value:boolean){
+            this._enabled = value;
+            this.visible = value;
         }
     }
 }
