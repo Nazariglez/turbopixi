@@ -11,4 +11,6 @@ module PIXI {
         WEBAUDIO,
         HTMLAUDIO
     }
+
+    export var zIndexEnabled:boolean = true;
 }

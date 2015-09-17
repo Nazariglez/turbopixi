@@ -22,7 +22,8 @@ module PIXI {
         loaderConcurrency: 10,
         audioChannelLines: 10,
         soundChannelLines: 10,
-        musicChannelLines: 1
+        musicChannelLines: 1,
+        zIndexEnabled: zIndexEnabled
     };
 
     export class Game {
@@ -60,6 +61,7 @@ module PIXI {
             this.isWebGL = (this.renderer.type === RENDERER_TYPE.WEBGL);
             this.isWebAudio = (Device.isAudioSupported&&Device.isWebAudioSupported&&config.useWebAudio);
             utils._audioTypeSelected = this.isWebAudio ? AUDIO_TYPE.WEBAUDIO : AUDIO_TYPE.HTMLAUDIO;
+            zIndexEnabled = config.zIndexEnabled;
 
             this.input = new InputManager(this);
             this.audio = new AudioManager(config.audioChannelLines, config.soundChannelLines, config.musicChannelLines);
@@ -293,6 +295,7 @@ module PIXI {
         audioChannelLines?:number;
         soundChannelLines?:number;
         musicChannelLines?:number;
+        zIndexEnabled?:boolean;
     }
 }
 

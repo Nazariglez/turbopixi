@@ -5,8 +5,9 @@ module PIXI {
     DisplayObject.prototype.velocity = new Point();
     DisplayObject.prototype.direction = 0;
     DisplayObject.prototype.rotationSpeed = 0;
+    DisplayObject.prototype.zIndex = 0;
 
-    DisplayObject.prototype.update = function(deltaTime:number){
+    DisplayObject.prototype.update = function(deltaTime:number):DisplayObject{
         return this;
     };
 }
