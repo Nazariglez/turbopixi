@@ -99,9 +99,7 @@ module PIXI {
         }
 
         update(deltaTime:number):Game {
-            for (var i = 0; i < this.scene.children.length; i++) {
-                this.scene.children[i].update(this.delta);
-            }
+            this.scene.update(this.delta);
 
             //clean killed objects
             var len:number = Container._killedObjects.length;
