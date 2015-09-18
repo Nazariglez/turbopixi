@@ -39,6 +39,7 @@ module PIXI {
             isCordova:boolean = !!window.cordova,
             isElectron:boolean = !!(typeof process === "object" && process.versions && (process.versions.electron || process.versions['atom-shell']));
 
+        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate || null;
         export var isVibrateSupported:boolean = !!navigator.vibrate && (isMobile || isTablet),
             isMouseWheelSupported:boolean = 'onwheel' in window || 'onmousewheel' in window || 'MouseScrollEvent' in window,
             isAccelerometerSupported:boolean = 'DeviceMotionEvent' in window,
@@ -122,6 +123,9 @@ interface Navigator {
     vibrate(pattern: number | number[]):boolean;
     getGamepads():any;
     webkitGetGamepads():any;
+    webkitVibrate():any;
+    mozVibrate():any;
+    msVibrate():any;
 }
 
 interface Window {
