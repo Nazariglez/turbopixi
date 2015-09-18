@@ -129,6 +129,7 @@ declare module PIXI {
     direction: number;
     velocity: Point;
     rotationSpeed: number;
+    zIndex: number;
     
     position: Point;
     scale: Point;
@@ -229,10 +230,12 @@ declare module PIXI {
     destroy(destroyChildren?: boolean): void;
     generateTexture(renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer, resolution?: number, scaleMode?: number): Texture;
     
-    update(deltaTime: number): DisplayObject;
-    addTo(parent: Container): DisplayObject;
-    kill(): DisplayObject;
-    remove(): DisplayObject;
+    update(deltaTime: number): Container;
+    addTo(parent: Container): Container;
+    kill(): Container;
+    remove(): Container;
+    sortChildrenByZIndex():Container;
+    tween():any;
     
     renderWebGL(renderer: WebGLRenderer): void;
     renderCanvas(renderer: CanvasRenderer): void;
@@ -1767,6 +1770,7 @@ declare module PIXI {
     WEBAUDIO = 1,
     HTMLAUDIO = 2,
   }
+  var zIndexEnabled: boolean;
   module Device {
     var isChrome: boolean, isFirefox: boolean, isIE: boolean, isOpera: boolean, isSafari: boolean;
     var isIphone: boolean, isIpad: boolean, isIpod: boolean, isAndroid: boolean, isAndroidPhone: boolean, isAndroidTablet: boolean, isLinux: boolean, isMac: boolean, isWindow: boolean, isWindowPhone: boolean, isWindowTablet: boolean, isMobile: boolean, isTablet: boolean, isDesktop: boolean, isTouchDevice: boolean, isCocoon: boolean, isNodeWebkit: boolean, isEjecta: boolean, isCrosswalk: boolean, isCordova: boolean, isElectron: boolean;
@@ -1778,10 +1782,157 @@ declare module PIXI {
     function getVisibilityChangeEvent(): string;
     function isOnline(): boolean;
   }
+  class Camera extends Container {
+    visible: boolean;
+    _enabled: boolean;
+    zIndex: number;
+    constructor();
+    update(deltaTime: number): Camera;
+    enabled: boolean;
+  }
+  class Timer {
+    time: number;
+    manager: TimerManager;
+    active: boolean;
+    isEnded: boolean;
+    isStarted: boolean;
+    expire: boolean;
+    delay: number;
+    repeat: number;
+    loop: boolean;
+    private _delayTime;
+    private _elapsedTime;
+    private _repeat;
+    constructor(time?: number, manager?: TimerManager);
+    update(deltaTime: number): Timer;
+    addTo(timerManager: TimerManager): Timer;
+    remove(): Timer;
+    start(): Timer;
+    stop(): Timer;
+    reset(): Timer;
+    onStart(callback: Function): Timer;
+    onEnd(callback: Function): Timer;
+    onStop(callback: Function): Timer;
+    onUpdate(callback: Function): Timer;
+    onRepeat(callback: Function): Timer;
+    private _onTimerStart(elapsedTime, deltaTime);
+    private _onTimerStop(elapsedTime);
+    private _onTimerRepeat(elapsedTime, deltaTime, repeat);
+    private _onTimerUpdate(elapsedTime, deltaTime);
+    private _onTimerEnd(elapsedTime, deltaTime);
+  }
+  class TimerManager {
+    timers: Timer[];
+    _toDelete: Timer[];
+    constructor();
+    update(deltaTime: number): TimerManager;
+    removeTimer(timer: Timer): TimerManager;
+    addTimer(timer: Timer): Timer;
+    createTimer(time?: number): Timer;
+    private _remove(timer);
+  }
+  module Easing {
+    function linear(): Function;
+    function inQuad(): Function;
+    function outQuad(): Function;
+    function inOutQuad(): Function;
+    function inCubic(): Function;
+    function outCubic(): Function;
+    function inOutCubic(): Function;
+    function inQuart(): Function;
+    function outQuart(): Function;
+    function inOutQuart(): Function;
+    function inQuint(): Function;
+    function outQuint(): Function;
+    function inOutQuint(): Function;
+    function inSine(): Function;
+    function outSine(): Function;
+    function inOutSine(): Function;
+    function inExpo(): Function;
+    function outExpo(): Function;
+    function inOutExpo(): Function;
+    function inCirc(): Function;
+    function outCirc(): Function;
+    function inOutCirc(): Function;
+    function inElastic(): Function;
+    function outElastic(): Function;
+    function inOutElastic(): Function;
+    function inBack(v?: number): Function;
+    function outBack(v?: number): Function;
+    function inOutBack(v?: number): Function;
+    function inBounce(): Function;
+    function outBounce(): Function;
+    function inOutBounce(): Function;
+  }
+  class Tween {
+    target: any;
+    manager: TweenManager;
+    time: number;
+    active: boolean;
+    easing: Function;
+    expire: boolean;
+    repeat: number;
+    loop: boolean;
+    delay: number;
+    pingPong: boolean;
+    isStarted: boolean;
+    isEnded: boolean;
+    private _to;
+    private _from;
+    private _delayTime;
+    private _elapsedTime;
+    private _repeat;
+    private _pingPong;
+    private _chainTween;
+    path: any;
+    pathReverse: boolean;
+    pathFrom: number;
+    pathTo: number;
+    constructor(target: any, manager?: TweenManager);
+    addTo(manager: TweenManager): Tween;
+    chain(tween?: Tween): Tween;
+    start(): Tween;
+    stop(): Tween;
+    to(data: any): Tween;
+    from(data: any): Tween;
+    remove(): Tween;
+    reset(): Tween;
+    onStart(callback: Function): Tween;
+    onEnd(callback: Function): Tween;
+    onStop(callback: Function): Tween;
+    onUpdate(callback: Function): Tween;
+    onRepeat(callback: Function): Tween;
+    onPingPong(callback: Function): Tween;
+    update(deltaTime: number): Tween;
+    private _parseData();
+    private _apply(time);
+    private _canUpdate();
+    private _onTweenStart(elapsedTime, deltaTime);
+    private _onTweenStop(elapsedTime);
+    private _onTweenEnd(elapsedTime, deltaTime);
+    private _onTweenRepeat(elapsedTime, deltaTime, repeat);
+    private _onTweenUpdate(elapsedTime, deltaTime);
+    private _onTweenPingPong(elapsedTime, deltaTime);
+  }
+  class TweenManager {
+    tweens: Tween[];
+    private _toDelete;
+    constructor();
+    update(deltaTime: number): TweenManager;
+    getTweensForTarger(target: any): Tween[];
+    createTween(target: any): Tween;
+    addTween(tween: Tween): Tween;
+    removeTween(tween: Tween): TweenManager;
+    private _remove(tween);
+  }
   class Scene extends Container {
     id: string;
+    camera: Camera;
+    timerManager: TimerManager;
+    tweenManager: TweenManager;
     static _idLen: number;
     constructor(id?: string);
+    update(deltaTime: number): Scene;
     addTo(game: Game | Container): Scene;
   }
   class InputManager {
@@ -1862,6 +2013,7 @@ declare module PIXI {
     audioChannelLines?: number;
     soundChannelLines?: number;
     musicChannelLines?: number;
+    zIndexEnabled?: boolean;
   }
   class AudioManager {
     private audioChannelLines;
@@ -1922,6 +2074,16 @@ declare module PIXI {
     pause(): Audio;
     resume(): Audio;
     volume: number;
+  }
+  class Pool {
+    objectCtor: any;
+    args: any[];
+    private _items;
+    constructor(amount: number, objectCtor: any, args?: any[]);
+    private _newObject();
+    put(item: any): void;
+    get(): any;
+    length: number;
   }
 
 }
