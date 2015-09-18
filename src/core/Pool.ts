@@ -1,3 +1,4 @@
+///<reference path="../../defs/pixi.js.d.ts" />
 module PIXI {
     export class Pool {
         private _items:any[] = [];
