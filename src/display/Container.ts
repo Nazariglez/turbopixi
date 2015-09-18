@@ -1,5 +1,6 @@
 ///<reference path="../../defs/pixi.js.d.ts" />
 ///<reference path="../core/const.ts" />
+///<reference path="../tween/Tween.ts" />
 module PIXI {
     Container._killedObjects = [];
 
@@ -48,5 +49,9 @@ module PIXI {
         });
         return this;
     };
+
+    Container.prototype.tween = function():Tween{
+        return new Tween(this);
+    }
 
 }

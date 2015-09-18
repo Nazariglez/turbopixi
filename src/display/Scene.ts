@@ -2,10 +2,12 @@
 ///<reference path="../core/Game.ts" />
 ///<reference path="./Camera.ts" />
 ///<reference path="../timer/TimerManager.ts" />
+///<reference path="../tween/Tweenmanager.ts" />
 module PIXI {
     export class Scene extends Container {
         camera:Camera = new Camera();
         timerManager:TimerManager = new TimerManager();
+        tweenManager:TweenManager = new TweenManager();
         static _idLen:number = 0;
 
         constructor(public id:string = ("scene" + Scene._idLen++) ){
@@ -15,6 +17,7 @@ module PIXI {
 
         update(deltaTime:number):Scene{
             this.timerManager.update(deltaTime);
+            this.tweenManager.update(deltaTime);
             super.update(deltaTime);
             return this;
         }
