@@ -92,9 +92,9 @@ module PIXI {
 
                 last = now;
 
-                this.renderer.render(this.scene);
-
                 this.update(this.delta);
+
+                this.renderer.render(this.scene);
             }
         }
 

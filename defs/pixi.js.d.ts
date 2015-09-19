@@ -240,7 +240,11 @@ declare module PIXI {
         kill(): Container;
         remove(): Container;
         sortChildrenByZIndex():Container;
-        tween():any;
+        tween(manager?:any):any;
+
+        _zIndex:number;
+        zIndex:number;
+        zDirty:boolean;
 
         renderWebGL(renderer: WebGLRenderer): void;
         renderCanvas(renderer: CanvasRenderer): void;

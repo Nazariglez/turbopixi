@@ -4,7 +4,15 @@
 module PIXI {
     Container._killedObjects = [];
 
+    Container.prototype._zIndex = 0;
+    Container.prototype.zDirty = false;
+
     Container.prototype.update = function(deltaTime: number):Container {
+        if(this.zDirty){
+            this.zDirty = false;
+            this.sortChildrenByZIndex();
+        }
+
         this.position.x += this.velocity.x * deltaTime;
         this.position.y += this.velocity.y * deltaTime;
         this.rotation += this.rotationSpeed * deltaTime;
@@ -19,7 +27,7 @@ module PIXI {
     var _addChild:Function = Container.prototype.addChild;
     Container.prototype.addChild = function(child:DisplayObject):DisplayObject{
         _addChild.call(this, child);
-        if(zIndexEnabled)this.sortChildrenByZIndex();
+        if(zIndexEnabled)this.zDirty = true;
         return child;
     };
 
@@ -50,8 +58,20 @@ module PIXI {
         return this;
     };
 
-    Container.prototype.tween = function():Tween{
+    Container.prototype.tween = function(manager?:TweenManager):Tween{
         return new Tween(this);
-    }
+    };
+
+    Object.defineProperty(Container.prototype, 'zIndex', {
+        get: function():number{
+            return this._zIndex;
+        },
+
+        set: function(value:number){
+            this._zIndex = value;
+            if(zIndexEnabled&&this.parent)this.parent.zDirty = true;
+        }
+
+    });
 
 }
