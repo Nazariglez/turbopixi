@@ -61,28 +61,93 @@ module PIXI {
         }
 
         getPoint(num:number):Point{
-
+            this.parsePoints();
+            var len:number = num*2;
+            this._tmpPoint.set(this.polygon.points[len],this.polygon.points[len + 1]);
             return this._tmpPoint;
         }
 
-        distanceeBetween(num1:number, num2:number):number{
+        distanceBetween(num1:number, num2:number):number{
+            this.parsePoints();
+            var {x:p1X, y:p1Y} = this.getPoint(num1);
+            var {x:p2X, y:p2Y} = this.getPoint(num2);
 
-            return 0;
+            var dx:number = p2X-p1X;
+            var dy:number = p2Y-p1Y;
+
+            return Math.sqrt(dx*dx+dy*dy);
         }
 
         totalDistance():number{
+            this.parsePoints();
+            this._tmpDistance.length = 0;
+            this._tmpDistance.push(0);
 
-            return 0;
+            var len:number = this.polygon.points.length;
+            var distance:number = 0;
+            for (var i:number = 0; i < len - 1; i++) {
+                distance += this.distanceBetween(i, i + 1);
+                this._tmpDistance.push(distance);
+            }
+
+            return distance;
         }
 
         getPointAt(num:number):Point{
+            this.parsePoints();
+            if(num > this.polygon.points.length){
+                return this.getPoint(this.polygon.points.length-1);
+            }
 
-            return this._tmpPoint;
+            if(num%1 === 0){
+                return this.getPoint(num);
+            }else{
+                this._tmpPoint2.set(0,0);
+
+                var diff:number = num%1;
+
+                var {x:ceilX, y:ceilY} = this.getPoint(Math.ceil(num));
+                var {x:floorX, y:floorY} = this.getPoint(Math.floor(num));
+
+                var xx:number = -((floorX - ceilX)*diff);
+                var yy:number = -((floorY - ceilY)*diff);
+                this._tmpPoint2.set(floorX + xx, floorY + yy);
+
+                return this._tmpPoint2;
+            }
         }
 
         getPointAtDistance(distance:number):Point{
+            this.parsePoints();
+            if(!this._tmpDistance)this.totalDistance();
+            var len:number = this._tmpDistance.length;
+            var n:number = 0;
 
-            return this._tmpPoint;
+            var totalDistance:number = this._tmpDistance[this._tmpDistance.length-1];
+            if(distance < 0){
+                distance = totalDistance+distance;
+            }else if(distance > totalDistance){
+                distance = distance-totalDistance;
+            }
+
+            for(var i:number = 0; i < len; i++){
+                if(distance >= this._tmpDistance[i]){
+                    n = i;
+                }
+
+                if(distance < this._tmpDistance[i]){
+                    break;
+                }
+            }
+
+            if(n === this.polygon.points.length-1){
+                return this.getPointAt(n);
+            }
+
+            var diff1:number = distance-this._tmpDistance[n];
+            var diff2:number = this._tmpDistance[n+1] - this._tmpDistance[n];
+
+            return this.getPointAt(n+diff1/diff2);
         }
 
         parsePoints():Path {
@@ -97,6 +162,13 @@ module PIXI {
                 }
             }
 
+            return this;
+        }
+
+        clear():Path{
+            this.polygon.points.length = 0;
+            this._closed = false;
+            this.dirty = false;
             return this;
         }
 
