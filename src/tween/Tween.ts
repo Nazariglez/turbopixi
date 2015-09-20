@@ -2,6 +2,7 @@
 ///<reference path="./TweenManager.ts" />
 ///<reference path="./Easing.ts" />
 ///<reference path="../display/Scene.ts" />
+///<reference path="./Path.ts" />
 module PIXI{
     export class Tween{
         time:number = 0;
@@ -24,8 +25,7 @@ module PIXI{
 
         private _chainTween:Tween;
 
-        //todo path
-        path:any;
+        path:Path;
         pathReverse:boolean = false;
         pathFrom:number;
         pathTo:number;
@@ -237,13 +237,32 @@ module PIXI{
             if(!this._from)this._from = {};
             _parseRecursiveData(this._to, this._from, this.target);
 
-            //todo: parse paths
+            if(this.path){
+                let distance:number = this.path.totalDistance();
+                if(this.pathReverse){
+                    this.pathFrom = distance;
+                    this.pathTo = 0;
+                }else{
+                    this.pathFrom = 0;
+                    this.pathTo = distance;
+                }
+            }
         }
 
         private _apply(time:number):void{
             _recursiveApply(this._to, this._from, this.target, time, this._elapsedTime, this.easing);
 
-            //todo: apply path
+            if(this.path){
+                let b:number = this.pathFrom,
+                    c:number = this.pathTo - this.pathFrom,
+                    d:number = this.time,
+                    t:number = this._elapsedTime/d;
+
+                let distance:number = b + (c*this.easing(t));
+                let pos:Point = this.path.getPointAtDistance(distance);
+                this.target.x = pos.x;
+                this.target.y = pos.y;
+            }
         }
 
         private _canUpdate():boolean{

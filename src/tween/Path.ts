@@ -83,7 +83,7 @@ module PIXI {
             this._tmpDistance.length = 0;
             this._tmpDistance.push(0);
 
-            var len:number = this.polygon.points.length;
+            var len:number = this.length;
             var distance:number = 0;
             for (var i:number = 0; i < len - 1; i++) {
                 distance += this.distanceBetween(i, i + 1);
@@ -95,8 +95,8 @@ module PIXI {
 
         getPointAt(num:number):Point{
             this.parsePoints();
-            if(num > this.polygon.points.length){
-                return this.getPoint(this.polygon.points.length-1);
+            if(num > this.length){
+                return this.getPoint(this.length-1);
             }
 
             if(num%1 === 0){
@@ -140,7 +140,7 @@ module PIXI {
                 }
             }
 
-            if(n === this.polygon.points.length-1){
+            if(n === this.length-1){
                 return this.getPointAt(n);
             }
 
@@ -166,6 +166,9 @@ module PIXI {
         }
 
         clear():Path{
+            this.graphicsData.length = 0;
+            this.currentPath = null;
+
             this.polygon.points.length = 0;
             this._closed = false;
             this.dirty = false;
@@ -180,6 +183,10 @@ module PIXI {
             this.polygon.closed = value;
             this._closed = value;
             this.dirty = true;
+        }
+
+        get length():number{
+            return (this.polygon.points.length === 0) ? 0 : this.polygon.points.length/2 + ((this._closed) ? 1 : 0);
         }
     }
 }
