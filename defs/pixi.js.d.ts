@@ -317,6 +317,7 @@ declare module PIXI {
         containsPoint(point: Point): boolean;
         updateLocalBounds(): void;
         drawShape(shape: Circle | Rectangle | Ellipse | Polygon): GraphicsData;
+        drawPath(path:any):Graphics;
 
     }
     export interface GraphicsRenderer extends ObjectRenderer {
