@@ -235,7 +235,11 @@ declare module PIXI {
     kill(): Container;
     remove(): Container;
     sortChildrenByZIndex():Container;
-    tween():any;
+    tween(manager?:any):any;
+    
+    _zIndex:number;
+    zIndex:number;
+    zDirty:boolean;
     
     renderWebGL(renderer: WebGLRenderer): void;
     renderCanvas(renderer: CanvasRenderer): void;
@@ -308,6 +312,7 @@ declare module PIXI {
     containsPoint(point: Point): boolean;
     updateLocalBounds(): void;
     drawShape(shape: Circle | Rectangle | Ellipse | Polygon): GraphicsData;
+    drawPath(path:any):Graphics;
     
   }
   export interface GraphicsRenderer extends ObjectRenderer {
@@ -1864,6 +1869,33 @@ declare module PIXI {
     function outBounce(): Function;
     function inOutBounce(): Function;
   }
+  class Path {
+    private _closed;
+    polygon: Polygon;
+    private _tmpPoint;
+    private _tmpPoint2;
+    private _tmpDistance;
+    private currentPath;
+    private graphicsData;
+    dirty: boolean;
+    constructor();
+    moveTo(x: number, y: number): Path;
+    lineTo(x: number, y: number): Path;
+    bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): Path;
+    quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): Path;
+    arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): Path;
+    arc(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): Path;
+    drawShape(shape: Polygon): Path;
+    getPoint(num: number): Point;
+    distanceBetween(num1: number, num2: number): number;
+    totalDistance(): number;
+    getPointAt(num: number): Point;
+    getPointAtDistance(distance: number): Point;
+    parsePoints(): Path;
+    clear(): Path;
+    closed: boolean;
+    length: number;
+  }
   class Tween {
     target: any;
     manager: TweenManager;
@@ -1884,7 +1916,7 @@ declare module PIXI {
     private _repeat;
     private _pingPong;
     private _chainTween;
-    path: any;
+    path: Path;
     pathReverse: boolean;
     pathFrom: number;
     pathTo: number;
