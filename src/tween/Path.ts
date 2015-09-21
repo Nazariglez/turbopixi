@@ -118,6 +118,7 @@ module PIXI {
         }
 
         getPointAtDistance(distance:number):Point{
+            //console.log(distance);
             this.parsePoints();
             if(!this._tmpDistance)this.totalDistance();
             var len:number = this._tmpDistance.length;

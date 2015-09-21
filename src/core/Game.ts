@@ -48,6 +48,8 @@ module PIXI {
         isWebGL:boolean;
         isWebAudio:boolean;
 
+        timeSpeed:number = 1;
+
         private _resizeListener:any;
 
         constructor(config?:GameConfig, rendererOptions?:RendererOptions) {
@@ -86,7 +88,7 @@ module PIXI {
             if(this.scene) {
                 var now:number = Date.now();
 
-                this.time += Math.min((now - last) / 1000, maxFrameMS);
+                this.time += Math.min((now - last) / 1000, maxFrameMS) * this.timeSpeed;
                 this.delta = this.time - this.lastTime;
                 this.lastTime = this.time;
 

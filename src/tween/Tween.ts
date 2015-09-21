@@ -160,13 +160,13 @@ module PIXI{
 
             var time:number = (this.pingPong) ? this.time/2 : this.time;
             if(time > this._elapsedTime){
-                var t:number = this._elapsedTime+deltaMS;
-                var ended:boolean = (t>=time);
+                let t:number = this._elapsedTime+deltaMS;
+                let ended:boolean = (t>=time);
 
                 this._elapsedTime = (ended) ? time : t;
                 this._apply(time);
 
-                var realElapsed:number = (this._pingPong) ? time+this._elapsedTime : this._elapsedTime;
+                let realElapsed:number = (this._pingPong) ? time+this._elapsedTime : this._elapsedTime;
                 this._onTweenUpdate(realElapsed, deltaTime);
 
                 if(ended) {
@@ -253,9 +253,10 @@ module PIXI{
             _recursiveApply(this._to, this._from, this.target, time, this._elapsedTime, this.easing);
 
             if(this.path){
+                let time:number = (this.pingPong) ? this.time/2 : this.time;
                 let b:number = this.pathFrom,
                     c:number = this.pathTo - this.pathFrom,
-                    d:number = this.time,
+                    d:number = time,
                     t:number = this._elapsedTime/d;
 
                 let distance:number = b + (c*this.easing(t));
