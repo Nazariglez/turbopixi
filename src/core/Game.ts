@@ -94,9 +94,10 @@ module PIXI {
 
                 last = now;
 
+                this.preUpdate(this.delta);
                 this.update(this.delta);
-
                 this.renderer.render(this.scene);
+                this.postUpdate(this.delta);
             }
         }
 
@@ -112,6 +113,10 @@ module PIXI {
 
             return this;
         }
+
+        preUpdate(deltaTime:number){}
+        postUpdate(deltaTime:number){}
+
 
         start():Game {
             last = Date.now();
