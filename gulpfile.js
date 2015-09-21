@@ -8,7 +8,6 @@ var sourcemaps = require('gulp-sourcemaps');
 var stripComments = require('gulp-strip-comments');
 var header = require('gulp-header');
 var wrap = require('gulp-wrap-js');
-var fs = require('fs');
 var watch = require('gulp-watch');
 var runSequence = require('run-sequence');
 var mergeDefs = require('./merge-defs');
@@ -23,7 +22,7 @@ var banner = ['/**',
     ' */',
     ''].join('\n');
 
-var txtWrapper = fs.readFileSync('./file-wrapper.txt', 'utf8');
+var fnWrapper = '(function(PIXI){ %= body % })( (typeof PIXI === "object") ? PIXI : null );';
 
 gulp.task('default', function(){
     console.log('Use \'gulp compile\' or \'gulp watch\'');
@@ -59,7 +58,7 @@ gulp.task('compile-js', function(){
 
     return merge([
         tsResult.js.pipe(concat('turbopixi.js'))
-            .pipe(wrap(txtWrapper))
+            .pipe(wrap(fnWrapper))
             .pipe(header(banner, {pkg:pkg}))
             .pipe(sourcemaps.write())
             .pipe(gulp.dest('./bin/'))

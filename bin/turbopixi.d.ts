@@ -2008,10 +2008,13 @@ declare module PIXI {
     lastTime: number;
     isWebGL: boolean;
     isWebAudio: boolean;
+    timeSpeed: number;
     private _resizeListener;
     constructor(config?: GameConfig, rendererOptions?: RendererOptions);
     private _animate();
     update(deltaTime: number): Game;
+    preUpdate(deltaTime: number): void;
+    postUpdate(deltaTime: number): void;
     start(): Game;
     stop(): Game;
     enableStopAtLostFocus(state?: boolean): Game;
