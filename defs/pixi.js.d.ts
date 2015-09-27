@@ -1235,6 +1235,9 @@ declare module PIXI {
             width: number;
             height: number;
             originalTexture: Texture;
+            tileVelocity: Point;
+            tileDirection:number;
+            tileSpeed:number;
 
             getBounds(): Rectangle;
             generateTilingTexture(renderer: WebGLRenderer | CanvasRenderer, texture: Texture, forcePowerOfTwo?: boolean): Texture;
