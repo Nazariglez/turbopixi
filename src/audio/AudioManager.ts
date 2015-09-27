@@ -1,5 +1,6 @@
 ///<reference path="./AudioLine.ts" />
 ///<reference path="../core/Game.ts" />
+//TODO: The audios system needs a big refactor/improvement
 module PIXI {
     export class AudioManager{
         soundLines:AudioLine[] = [];

@@ -1230,6 +1230,9 @@ declare module PIXI {
       width: number;
       height: number;
       originalTexture: Texture;
+      tileVelocity: Point;
+      tileDirection:number;
+      tileSpeed:number;
       
       getBounds(): Rectangle;
       generateTilingTexture(renderer: WebGLRenderer | CanvasRenderer, texture: Texture, forcePowerOfTwo?: boolean): Texture;
@@ -2119,6 +2122,14 @@ declare module PIXI {
     put(item: any): void;
     get(): any;
     length: number;
+  }
+  class SpeedPoint extends Point {
+    private _callback;
+    private _x;
+    private _y;
+    constructor(x?: number, y?: number, _callback?: Function);
+    x: number;
+    y: number;
   }
 
 }
